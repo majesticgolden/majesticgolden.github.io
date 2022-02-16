@@ -1,0 +1,441 @@
+/*Theme customizations*/
+@font-face {
+    font-family: 'font-awesome-custom';
+    src: url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/fonts/fontawesome-webfont.eot?v=4.3.0');
+    src: url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/fonts/fontawesome-webfont.eot?#iefix&v=4.3.0') format('embedded-opentype'), url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/fonts/fontawesome-webfont.woff2?v=4.3.0') format('woff2'), url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/fonts/fontawesome-webfont.woff?v=4.3.0') format('woff'), url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/fonts/fontawesome-webfont.ttf?v=4.3.0') format('truetype'), url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/fonts/fontawesome-webfont.svg?v=4.3.0#fontawesomeregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.na.nicheacademyWidget {
+    font-family: 'Open Sans', sans-serif;
+    font-weight: normal !important;
+}
+
+.na.nicheacademyWidget p{
+    font-family: 'Open Sans', sans-serif !important;
+    margin: 0px;
+    padding: 0px;
+
+}
+
+.modal-na-content{
+    font-family: 'Open Sans', sans-serif !important;
+}
+
+.na.lightboxNicheAcademy i,
+i.na.lightboxNicheAcademy,
+.na.lightboxNicheAcademy i:hover,
+i:hover.na.lightboxNicheAcademy,
+.na.lightboxNicheAcademy i:focus,
+i:focus.na.lightboxNicheAcademy,
+
+.na.nicheacademyWidget i,
+i.na.nicheacademyWidget,
+.na.nicheacademyWidget i:hover,
+i:hover.na.nicheacademyWidget,
+.na.nicheacademyWidget i:focus,
+i:focus.na.nicheacademyWidget{
+    height: auto;
+    margin: 0px;
+    padding: 0px;
+}
+
+.previewButton .na.nicheacademyWidget.fa {
+    color: white !important;
+}
+
+.sideButton .na.nicheacademyWidget.fa {
+    color: white !important;
+}
+
+.na.nicheacademyWidget.na-video-camera {
+    display: inline-block;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    content: "\f03d" !important;
+    font-family: "font-awesome-custom"
+}
+
+.na.nicheacademyWidget.na-video-camera:before {
+    content: "\f03d" !important;
+    font-family: "font-awesome-custom"
+}
+
+.na.nicheacademyWidget.na-lightbulb-o {
+    display: inline-block;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    content: "\f0eb" !important;
+    font-family: "font-awesome-custom"
+}
+
+.na.nicheacademyWidget.na-lightbulb-o:before {
+    content: "\f0eb" !important;
+    font-family: "font-awesome-custom"
+}
+
+.na.lightboxNicheAcademy a:hover,
+.na.lightboxNicheAcademy a:focus,
+.na.lightboxNicheAcademy i:hover,
+.na.lightboxNicheAcademy i:focus,
+
+.na.nicheacademyWidget a:hover,
+.na.nicheacademyWidget a:focus,
+.na.nicheacademyWidget i:hover,
+.na.nicheacademyWidget i:focus {
+    background-image: none;
+    text-decoration: none !important;
+}
+
+
+.na.bgPrimary{
+    background: #004479;
+}
+
+.na.bgSecondary{
+    background: #ccdae4;
+}
+
+.na.colorPrimary{
+    color: #004479 !important;
+}
+
+.na.colorSecondary{
+    color: #ccdae4 !important;
+}
+
+.na.previewButton{
+    border: 0;
+    width: auto;
+    height: auto;
+    color: #FFFFFF !important;
+    cursor: pointer;
+    font-weight: 400 !important;
+    position: relative;
+    white-space: nowrap;
+    display: inline-block;
+    text-decoration: none !important;
+    padding: 6px 13px;
+    margin: 0px;
+    // text-transform: capitalize;
+    z-index:999;
+    background-image: linear-gradient(to bottom right, transparent, rgba(38,50,56,.4)) !important;
+}
+.na.fa {
+  font-family: FontAwesome;
+}
+.na.previewButton:hover,
+.na.previewButton:focus {
+    background-image: none !important;
+    color: #fff !important;
+    font-weight: 400 !important;
+    padding: 6px 13px;    
+    margin: 0px;
+    width: auto;
+    height: auto;    
+    text-decoration: none !important;        
+}
+
+.na.previewLink{
+    border: 0;
+    width: auto;
+    height: auto;
+    cursor: pointer;
+    font-weight: 400 !important;
+    position: relative;
+    display: inline-block;
+    text-decoration: underline !important;
+    margin: 0px;
+    z-index:999;
+}
+
+.na.rounded {
+    border-radius: 5px !important;
+}
+
+/* The Modal-na (background) */
+.na.modal-na {
+    // display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 999999; /* Sit on top */
+    padding-top: 60px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.75); /* Black w/ opacity */
+    
+}
+
+/* Modal-na Content */
+.na.modal-na-content {
+    background-color: #fefefe;
+    margin: auto;
+    max-width:756px;
+    height: 80%;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+.closeIcon{
+    margin: 0;
+    line-height:0 !important;
+    padding: 8px 0px 0px 0px;
+    width: auto;
+    height: 28px;
+    background-color: #004479 ;
+    background-image: linear-gradient(to right, transparent, rgba(38,50,56,.4)) !important;
+    color: #FFFFFF;
+    font-size: 18px;
+    z-index: 99;
+    text-align: right;
+    text-decoration: none !important;
+}
+.fullScreenLink{
+    text-decoration: none !important;
+    padding-right: 10px;
+    cursor:pointer;
+}
+.na.nicheacademyWidget .na.closeIcon a, 
+.na.nicheacademyWidget  .na.closeIcon a:hover
+.na.nicheacademyWidget  .na.closeIcon a:focus,
+
+//.na.lightboxNicheAcademy .na.closeIcon a, 
+//.na.lightboxNicheAcademy  .na.closeIcon a:hover
+//.na.lightboxNicheAcademy  .na.closeIcon a:focus
+{
+    margin: 0;
+    line-height:0 !important;
+    padding: 0;
+    width: auto;
+    height: 36px;
+    background-image: none !important; 
+    color: #FFFFFF;
+    cursor: pointer;
+    font-size: 18px;
+    z-index: 99;
+    text-align: right;
+    text-decoration: none !important;
+    font-size: 18px;
+    margin-top: 10px;
+}
+
+.na.lightboxFrame{
+    width: 100%;
+    height: 100%;
+}
+
+.na.sliderFrame{
+    border: none;
+    width: 100%;
+    height: 100%;
+}
+
+.na.colorWhite {
+    color: #FFFFFF !important;
+}
+
+.na.clickable{
+    cursor: pointer;
+}
+
+.na.sideButton{
+  float: right;
+  color:#fff !important;
+  padding: 6px 13px;
+  margin: 0px;
+  line-height: 40px;
+  animation: main 3s;
+  cursor:pointer;
+  z-index:999;
+  background-image: linear-gradient(to bottom right, transparent, rgba(38,50,56,.4)) !important;    
+  font-weight: normal !important;
+  width: auto;
+  height: auto;
+  text-decoration: none !important;  
+}
+
+.na.sideButton.right{
+    transform-origin: 0% 100%;
+    transform:rotate(90deg);
+}
+
+.rotate-90 {
+    transform:rotate(-90deg) !important;
+}
+
+.na.sideButton.left{
+    transform-origin: 0% 100%;
+    transform: rotate(90deg);
+}
+
+.na.sideButton:hover,
+.na.sideButton:focus{
+    background-image : none !important;
+    color: #fff !important;
+    font-weight: normal !important;
+    margin: 0px;
+    padding: 6px 13px;
+    width: auto;
+    height: auto;
+    text-decoration: none !important;    
+}
+
+.na.mySideSlider {
+    z-index: 999999999;
+    height: 100%;
+    max-width: 564px;
+    width: 100%;
+    background-color: white;
+    border: 1px solid #e0e0e0;
+    box-shadow: -3px 0 10px 0 rgba(38,50,56,.50);
+    position: fixed;
+    top: 0;
+    transition: 0.5s;
+    overflow: auto; /* Enable scroll if needed */
+    display: flex;
+    flex-direction: column;
+}
+
+@media (max-width: 991px) {
+    .na.modal-na{
+        padding:0;
+    }
+    .na.modal-na-content{
+        height:calc(100% - 4px);
+        max-width:inherit;
+    }
+}
+
+<!-- carousel styling -->
+* {box-sizing: border-box}
+.na.nicheSlides {
+    display: none;
+    text-align: center;
+    overflow: hidden;
+    background: #000;
+    -webkit-animation-name: fade;
+    -webkit-animation-duration: 1.5s;
+    animation-name: fade;
+    animation-duration: 1.5s;
+}
+.na.nicheSlides>div.na.imgContainer>img {
+    max-height:100%;
+}
+.na.imgContainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Slideshow container */
+.na.slideshow-container {
+  position: relative;
+  margin: auto;
+}
+.na.slideshow-container i,
+.na.slideshow-container i:hover {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    font-size: 5em;
+    margin-top: -51px;
+    margin-left: -40px;
+    width: auto;
+    height: auto;
+}
+
+.na.slideshow-container svg,
+.na.slideshow-container svg:hover {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    font-size: 5em;
+    margin-top: -51px;
+    margin-left: -40px;
+    height: auto;
+}
+
+/* Next & previous buttons */
+.na.prev, .na.next {
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  width: auto;
+  height: auto;
+  padding: 16px;
+  margin: -22px 0 0 0;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  transition: 0.6s ease;
+  border-radius: 0 3px 3px 0;
+}
+
+/* Position the "prev button" to the right */
+.na.prev {
+  left: 0;
+  border-radius: 3px 0 0 3px;
+  text-decoration: none !important;
+}
+
+/* Position the "next button" to the right */
+.na.next {
+  right: 0;
+  border-radius: 3px 0 0 3px;
+  text-decoration: none !important;
+}
+
+/* On hover, add a black background color with a little bit see-through */
+.na.prev:hover, .na.next:hover,
+.na.prev:focus, .na.next:focus {
+  background-color: rgba(0,0,0,0.8);
+  color: #fff !important;
+  padding: 16px;
+  margin: -22px 0 0 0;  
+  width: auto;
+  height: auto;
+  text-decoration: none !important;
+}
+
+/* Caption text */
+.na.nicheacademyWidget .na.text {
+  color: #f2f2f2;
+  font-size: 18px;
+  padding: 8px 12px;
+  background-image: linear-gradient(-300deg, #004479, #fff  300%);
+  text-align: left;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  font-family: 'Open Sans', sans-serif !important;
+
+}
+
+@-webkit-keyframes fade {
+  from {opacity: .4} 
+  to {opacity: 1}
+}
+
+@keyframes fade {
+  from {opacity: .4} 
+  to {opacity: 1}
+}
+
+/* On smaller screens, decrease text size */
+@media only screen and (max-width: 300px) {
+  .na.prev, .na.next,.na.text {font-size: 11px}
+}
+
+.modal-na-content{
+    border-radius: 8px;
+}

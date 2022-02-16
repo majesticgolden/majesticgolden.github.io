@@ -1,0 +1,61 @@
+(function ($) {
+  // When the lapl_menu.parent variable is set, inject the title of the current page as a child.
+  Drupal.behaviors.lapl_menu_fix = {
+    attach: function (context) {
+      if(Drupal.settings.lapl_menu && Drupal.settings.lapl_menu.parent && $('.region-sidebar-first', context).length) {
+        var defaults = {
+          title: null,
+          selector: '#page-title',
+          trim: 40,
+          suffix: "&hellip;",
+          href: window.location.href
+        };
+        var settings = $.extend({}, defaults, Drupal.settings.lapl_menu);
+        settings.title = $(settings.selector).html();
+        if(settings.title === null) {
+          return false;
+        }
+        var txt = $.trim(settings.title.toString().replace(/(<em>)(.*)(<\/em>)/i, '[$2]'));
+        // if plain text title length is longer than our pref, trim it down.
+        // don't break in the middle of a word, and keep <EM> tags in place
+        if(txt.length > settings.trim) {
+          var charAtLen = txt.substr(settings.trim, 1);
+          while(settings.trim < txt.length && !/\s/.test(charAtLen)) {
+            settings.trim++;
+            charAtLen = txt.substr(settings.trim, 1);
+          }
+          txt = txt.substring(0, settings.trim);
+          // if not paired, add a closing ] "tag"
+          if(txt.search(/\[/g) != -1 && txt.search(/\]/g) == -1) {
+            txt = txt + ']';
+          }
+          // restore the <EM> tags
+          settings.title = txt.replace(/(\[)(.*)(\])/, "<em>$2</em>") + settings.suffix;
+        }
+        var child = '<ul class="menu"><li class="leaf active-trail active"><a href="#" class="active-trail active">' + settings.title + '</a></li></ul>';
+        var parent = $('.region-sidebar-first a[href="' + Drupal.settings.basePath + settings.parent + '"]', context);
+        parent.addClass('expanded').after(child);
+        parent.next('.menu').show(); // default CSS is to hide nested menus; explicitly show the one we just added
+      }
+    }
+  };
+})(jQuery);;
+/**
+ * @file
+ * Small JS code, prevent user to click multiple times.
+ *
+ */
+(function ($) {
+  'use strict';
+  Drupal.behaviors.prevent_multiple_submit = {
+    attach: function (context, settings) {
+      jQuery('form').submit(function () {
+        jQuery(this).submit(function (e) {
+          e.preventDefault();
+        });
+        return true;
+      });
+    }
+  };
+})(jQuery);
+;

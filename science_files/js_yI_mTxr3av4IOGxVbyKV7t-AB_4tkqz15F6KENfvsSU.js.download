@@ -1,0 +1,3259 @@
+/*
+ * jQuery Easing v1.4.1 - http://gsgd.co.uk/sandbox/jquery/easing/
+ * Open source under the BSD License.
+ * Copyright Â© 2008 George McGinley Smith
+ * All rights reserved.
+ * https://raw.github.com/gdsmith/jquery-easing/master/LICENSE
+*/
+
+(function (factory) {
+	if (typeof define === "function" && define.amd) {
+		define(['jquery'], function ($) {
+			return factory($);
+		});
+	} else if (typeof module === "object" && typeof module.exports === "object") {
+		exports = factory(require('jquery'));
+	} else {
+		factory(jQuery);
+	}
+})(function($){
+
+// Preserve the original jQuery "swing" easing as "jswing"
+$.easing.jswing = $.easing.swing;
+
+var pow = Math.pow,
+	sqrt = Math.sqrt,
+	sin = Math.sin,
+	cos = Math.cos,
+	PI = Math.PI,
+	c1 = 1.70158,
+	c2 = c1 * 1.525,
+	c3 = c1 + 1,
+	c4 = ( 2 * PI ) / 3,
+	c5 = ( 2 * PI ) / 4.5;
+
+// x is the fraction of animation progress, in the range 0..1
+function bounceOut(x) {
+	var n1 = 7.5625,
+		d1 = 2.75;
+	if ( x < 1/d1 ) {
+		return n1*x*x;
+	} else if ( x < 2/d1 ) {
+		return n1*(x-=(1.5/d1))*x + 0.75;
+	} else if ( x < 2.5/d1 ) {
+		return n1*(x-=(2.25/d1))*x + 0.9375;
+	} else {
+		return n1*(x-=(2.625/d1))*x + 0.984375;
+	}
+}
+
+$.extend( $.easing,
+{
+	def: 'easeOutQuad',
+	swing: function (x) {
+		return $.easing[$.easing.def](x);
+	},
+	easeInQuad: function (x) {
+		return x * x;
+	},
+	easeOutQuad: function (x) {
+		return 1 - ( 1 - x ) * ( 1 - x );
+	},
+	easeInOutQuad: function (x) {
+		return x < 0.5 ?
+			2 * x * x :
+			1 - pow( -2 * x + 2, 2 ) / 2;
+	},
+	easeInCubic: function (x) {
+		return x * x * x;
+	},
+	easeOutCubic: function (x) {
+		return 1 - pow( 1 - x, 3 );
+	},
+	easeInOutCubic: function (x) {
+		return x < 0.5 ?
+			4 * x * x * x :
+			1 - pow( -2 * x + 2, 3 ) / 2;
+	},
+	easeInQuart: function (x) {
+		return x * x * x * x;
+	},
+	easeOutQuart: function (x) {
+		return 1 - pow( 1 - x, 4 );
+	},
+	easeInOutQuart: function (x) {
+		return x < 0.5 ?
+			8 * x * x * x * x :
+			1 - pow( -2 * x + 2, 4 ) / 2;
+	},
+	easeInQuint: function (x) {
+		return x * x * x * x * x;
+	},
+	easeOutQuint: function (x) {
+		return 1 - pow( 1 - x, 5 );
+	},
+	easeInOutQuint: function (x) {
+		return x < 0.5 ?
+			16 * x * x * x * x * x :
+			1 - pow( -2 * x + 2, 5 ) / 2;
+	},
+	easeInSine: function (x) {
+		return 1 - cos( x * PI/2 );
+	},
+	easeOutSine: function (x) {
+		return sin( x * PI/2 );
+	},
+	easeInOutSine: function (x) {
+		return -( cos( PI * x ) - 1 ) / 2;
+	},
+	easeInExpo: function (x) {
+		return x === 0 ? 0 : pow( 2, 10 * x - 10 );
+	},
+	easeOutExpo: function (x) {
+		return x === 1 ? 1 : 1 - pow( 2, -10 * x );
+	},
+	easeInOutExpo: function (x) {
+		return x === 0 ? 0 : x === 1 ? 1 : x < 0.5 ?
+			pow( 2, 20 * x - 10 ) / 2 :
+			( 2 - pow( 2, -20 * x + 10 ) ) / 2;
+	},
+	easeInCirc: function (x) {
+		return 1 - sqrt( 1 - pow( x, 2 ) );
+	},
+	easeOutCirc: function (x) {
+		return sqrt( 1 - pow( x - 1, 2 ) );
+	},
+	easeInOutCirc: function (x) {
+		return x < 0.5 ?
+			( 1 - sqrt( 1 - pow( 2 * x, 2 ) ) ) / 2 :
+			( sqrt( 1 - pow( -2 * x + 2, 2 ) ) + 1 ) / 2;
+	},
+	easeInElastic: function (x) {
+		return x === 0 ? 0 : x === 1 ? 1 :
+			-pow( 2, 10 * x - 10 ) * sin( ( x * 10 - 10.75 ) * c4 );
+	},
+	easeOutElastic: function (x) {
+		return x === 0 ? 0 : x === 1 ? 1 :
+			pow( 2, -10 * x ) * sin( ( x * 10 - 0.75 ) * c4 ) + 1;
+	},
+	easeInOutElastic: function (x) {
+		return x === 0 ? 0 : x === 1 ? 1 : x < 0.5 ?
+			-( pow( 2, 20 * x - 10 ) * sin( ( 20 * x - 11.125 ) * c5 )) / 2 :
+			pow( 2, -20 * x + 10 ) * sin( ( 20 * x - 11.125 ) * c5 ) / 2 + 1;
+	},
+	easeInBack: function (x) {
+		return c3 * x * x * x - c1 * x * x;
+	},
+	easeOutBack: function (x) {
+		return 1 + c3 * pow( x - 1, 3 ) + c1 * pow( x - 1, 2 );
+	},
+	easeInOutBack: function (x) {
+		return x < 0.5 ?
+			( pow( 2 * x, 2 ) * ( ( c2 + 1 ) * 2 * x - c2 ) ) / 2 :
+			( pow( 2 * x - 2, 2 ) *( ( c2 + 1 ) * ( x * 2 - 2 ) + c2 ) + 2 ) / 2;
+	},
+	easeInBounce: function (x) {
+		return 1 - bounceOut( 1 - x );
+	},
+	easeOutBounce: bounceOut,
+	easeInOutBounce: function (x) {
+		return x < 0.5 ?
+			( 1 - bounceOut( 1 - 2 * x ) ) / 2 :
+			( 1 + bounceOut( 2 * x - 1 ) ) / 2;
+	}
+});
+
+});;
+/*!
+ * jQuery doTimeout: Like setTimeout, but better! - v1.0 - 3/3/2010
+ * http://benalman.com/projects/jquery-dotimeout-plugin/
+ * 
+ * Copyright (c) 2010 "Cowboy" Ben Alman
+ * Dual licensed under the MIT and GPL licenses.
+ * http://benalman.com/about/license/
+ */
+
+// Script: jQuery doTimeout: Like setTimeout, but better!
+//
+// *Version: 1.0, Last updated: 3/3/2010*
+// 
+// Project Home - http://benalman.com/projects/jquery-dotimeout-plugin/
+// GitHub       - http://github.com/cowboy/jquery-dotimeout/
+// Source       - http://github.com/cowboy/jquery-dotimeout/raw/master/jquery.ba-dotimeout.js
+// (Minified)   - http://github.com/cowboy/jquery-dotimeout/raw/master/jquery.ba-dotimeout.min.js (1.0kb)
+// 
+// About: License
+// 
+// Copyright (c) 2010 "Cowboy" Ben Alman,
+// Dual licensed under the MIT and GPL licenses.
+// http://benalman.com/about/license/
+// 
+// About: Examples
+// 
+// These working examples, complete with fully commented code, illustrate a few
+// ways in which this plugin can be used.
+// 
+// Debouncing      - http://benalman.com/code/projects/jquery-dotimeout/examples/debouncing/
+// Delays, Polling - http://benalman.com/code/projects/jquery-dotimeout/examples/delay-poll/
+// Hover Intent    - http://benalman.com/code/projects/jquery-dotimeout/examples/hoverintent/
+// 
+// About: Support and Testing
+// 
+// Information about what version or versions of jQuery this plugin has been
+// tested with, what browsers it has been tested in, and where the unit tests
+// reside (so you can test it yourself).
+// 
+// jQuery Versions - 1.3.2, 1.4.2
+// Browsers Tested - Internet Explorer 6-8, Firefox 2-3.6, Safari 3-4, Chrome 4-5, Opera 9.6-10.1.
+// Unit Tests      - http://benalman.com/code/projects/jquery-dotimeout/unit/
+// 
+// About: Release History
+// 
+// 1.0 - (3/3/2010) Callback can now be a string, in which case it will call
+//       the appropriate $.method or $.fn.method, depending on where .doTimeout
+//       was called. Callback must now return `true` (not just a truthy value)
+//       to poll.
+// 0.4 - (7/15/2009) Made the "id" argument optional, some other minor tweaks
+// 0.3 - (6/25/2009) Initial release
+
+(function($){
+  '$:nomunge'; // Used by YUI compressor.
+  
+  var cache = {},
+    
+    // Reused internal string.
+    doTimeout = 'doTimeout',
+    
+    // A convenient shortcut.
+    aps = Array.prototype.slice;
+  
+  // Method: jQuery.doTimeout
+  // 
+  // Initialize, cancel, or force execution of a callback after a delay.
+  // 
+  // If delay and callback are specified, a doTimeout is initialized. The
+  // callback will execute, asynchronously, after the delay. If an id is
+  // specified, this doTimeout will override and cancel any existing doTimeout
+  // with the same id. Any additional arguments will be passed into callback
+  // when it is executed.
+  // 
+  // If the callback returns true, the doTimeout loop will execute again, after
+  // the delay, creating a polling loop until the callback returns a non-true
+  // value.
+  // 
+  // Note that if an id is not passed as the first argument, this doTimeout will
+  // NOT be able to be manually canceled or forced. (for debouncing, be sure to
+  // specify an id).
+  // 
+  // If id is specified, but delay and callback are not, the doTimeout will be
+  // canceled without executing the callback. If force_mode is specified, the
+  // callback will be executed, synchronously, but will only be allowed to
+  // continue a polling loop if force_mode is true (provided the callback
+  // returns true, of course). If force_mode is false, no polling loop will
+  // continue, even if the callback returns true.
+  // 
+  // Usage:
+  // 
+  // > jQuery.doTimeout( [ id, ] delay, callback [, arg ... ] );
+  // > jQuery.doTimeout( id [, force_mode ] );
+  // 
+  // Arguments:
+  // 
+  //  id - (String) An optional unique identifier for this doTimeout. If id is
+  //    not specified, the doTimeout will NOT be able to be manually canceled or
+  //    forced.
+  //  delay - (Number) A zero-or-greater delay in milliseconds after which
+  //    callback will be executed. 
+  //  callback - (Function) A function to be executed after delay milliseconds.
+  //  callback - (String) A jQuery method to be executed after delay
+  //    milliseconds. This method will only poll if it explicitly returns
+  //    true.
+  //  force_mode - (Boolean) If true, execute that id's doTimeout callback
+  //    immediately and synchronously, continuing any callback return-true
+  //    polling loop. If false, execute the callback immediately and
+  //    synchronously but do NOT continue a callback return-true polling loop.
+  //    If omitted, cancel that id's doTimeout.
+  // 
+  // Returns:
+  // 
+  //  If force_mode is true, false or undefined and there is a
+  //  yet-to-be-executed callback to cancel, true is returned, but if no
+  //  callback remains to be executed, undefined is returned.
+  
+  $[doTimeout] = function() {
+    return p_doTimeout.apply( window, [ 0 ].concat( aps.call( arguments ) ) );
+  };
+  
+  // Method: jQuery.fn.doTimeout
+  // 
+  // Initialize, cancel, or force execution of a callback after a delay.
+  // Operates like <jQuery.doTimeout>, but the passed callback executes in the
+  // context of the jQuery collection of elements, and the id is stored as data
+  // on the first element in that collection.
+  // 
+  // If delay and callback are specified, a doTimeout is initialized. The
+  // callback will execute, asynchronously, after the delay. If an id is
+  // specified, this doTimeout will override and cancel any existing doTimeout
+  // with the same id. Any additional arguments will be passed into callback
+  // when it is executed.
+  // 
+  // If the callback returns true, the doTimeout loop will execute again, after
+  // the delay, creating a polling loop until the callback returns a non-true
+  // value.
+  // 
+  // Note that if an id is not passed as the first argument, this doTimeout will
+  // NOT be able to be manually canceled or forced (for debouncing, be sure to
+  // specify an id).
+  // 
+  // If id is specified, but delay and callback are not, the doTimeout will be
+  // canceled without executing the callback. If force_mode is specified, the
+  // callback will be executed, synchronously, but will only be allowed to
+  // continue a polling loop if force_mode is true (provided the callback
+  // returns true, of course). If force_mode is false, no polling loop will
+  // continue, even if the callback returns true.
+  // 
+  // Usage:
+  // 
+  // > jQuery('selector').doTimeout( [ id, ] delay, callback [, arg ... ] );
+  // > jQuery('selector').doTimeout( id [, force_mode ] );
+  // 
+  // Arguments:
+  // 
+  //  id - (String) An optional unique identifier for this doTimeout, stored as
+  //    jQuery data on the element. If id is not specified, the doTimeout will
+  //    NOT be able to be manually canceled or forced.
+  //  delay - (Number) A zero-or-greater delay in milliseconds after which
+  //    callback will be executed. 
+  //  callback - (Function) A function to be executed after delay milliseconds.
+  //  callback - (String) A jQuery.fn method to be executed after delay
+  //    milliseconds. This method will only poll if it explicitly returns
+  //    true (most jQuery.fn methods return a jQuery object, and not `true`,
+  //    which allows them to be chained and prevents polling).
+  //  force_mode - (Boolean) If true, execute that id's doTimeout callback
+  //    immediately and synchronously, continuing any callback return-true
+  //    polling loop. If false, execute the callback immediately and
+  //    synchronously but do NOT continue a callback return-true polling loop.
+  //    If omitted, cancel that id's doTimeout.
+  // 
+  // Returns:
+  // 
+  //  When creating a <jQuery.fn.doTimeout>, the initial jQuery collection of
+  //  elements is returned. Otherwise, if force_mode is true, false or undefined
+  //  and there is a yet-to-be-executed callback to cancel, true is returned,
+  //  but if no callback remains to be executed, undefined is returned.
+  
+  $.fn[doTimeout] = function() {
+    var args = aps.call( arguments ),
+      result = p_doTimeout.apply( this, [ doTimeout + args[0] ].concat( args ) );
+    
+    return typeof args[0] === 'number' || typeof args[1] === 'number'
+      ? this
+      : result;
+  };
+  
+  function p_doTimeout( jquery_data_key ) {
+    var that = this,
+      elem,
+      data = {},
+      
+      // Allows the plugin to call a string callback method.
+      method_base = jquery_data_key ? $.fn : $,
+      
+      // Any additional arguments will be passed to the callback.
+      args = arguments,
+      slice_args = 4,
+      
+      id        = args[1],
+      delay     = args[2],
+      callback  = args[3];
+    
+    if ( typeof id !== 'string' ) {
+      slice_args--;
+      
+      id        = jquery_data_key = 0;
+      delay     = args[1];
+      callback  = args[2];
+    }
+    
+    // If id is passed, store a data reference either as .data on the first
+    // element in a jQuery collection, or in the internal cache.
+    if ( jquery_data_key ) { // Note: key is 'doTimeout' + id
+      
+      // Get id-object from the first element's data, otherwise initialize it to {}.
+      elem = that.eq(0);
+      elem.data( jquery_data_key, data = elem.data( jquery_data_key ) || {} );
+      
+    } else if ( id ) {
+      // Get id-object from the cache, otherwise initialize it to {}.
+      data = cache[ id ] || ( cache[ id ] = {} );
+    }
+    
+    // Clear any existing timeout for this id.
+    data.id && clearTimeout( data.id );
+    delete data.id;
+    
+    // Clean up when necessary.
+    function cleanup() {
+      if ( jquery_data_key ) {
+        elem.removeData( jquery_data_key );
+      } else if ( id ) {
+        delete cache[ id ];
+      }
+    };
+    
+    // Yes, there actually is a setTimeout call in here!
+    function actually_setTimeout() {
+      data.id = setTimeout( function(){ data.fn(); }, delay );
+    };
+    
+    if ( callback ) {
+      // A callback (and delay) were specified. Store the callback reference for
+      // possible later use, and then setTimeout.
+      data.fn = function( no_polling_loop ) {
+        
+        // If the callback value is a string, it is assumed to be the name of a
+        // method on $ or $.fn depending on where doTimeout was executed.
+        if ( typeof callback === 'string' ) {
+          callback = method_base[ callback ];
+        }
+        
+        callback.apply( that, aps.call( args, slice_args ) ) === true && !no_polling_loop
+          
+          // Since the callback returned true, and we're not specifically
+          // canceling a polling loop, do it again!
+          ? actually_setTimeout()
+          
+          // Otherwise, clean up and quit.
+          : cleanup();
+      };
+      
+      // Set that timeout!
+      actually_setTimeout();
+      
+    } else if ( data.fn ) {
+      // No callback passed. If force_mode (delay) is true, execute the data.fn
+      // callback immediately, continuing any callback return-true polling loop.
+      // If force_mode is false, execute the data.fn callback immediately but do
+      // NOT continue a callback return-true polling loop. If force_mode is
+      // undefined, simply clean up. Since data.fn was still defined, whatever
+      // was supposed to happen hadn't yet, so return true.
+      delay === undefined ? cleanup() : data.fn( delay === false );
+      return true;
+      
+    } else {
+      // Since no callback was passed, and data.fn isn't defined, it looks like
+      // whatever was supposed to happen already did. Clean up and quit!
+      cleanup();
+    }
+    
+  };
+  
+})(jQuery);
+;
+/*!
+ * urlInternal - v1.0 - 10/7/2009
+ * http://benalman.com/projects/jquery-urlinternal-plugin/
+ * 
+ * Copyright (c) 2009 "Cowboy" Ben Alman
+ * Dual licensed under the MIT and GPL licenses.
+ * http://benalman.com/about/license/
+ */
+
+// Script: jQuery urlInternal: Easily test URL internal-, external or fragment-ness
+// 
+// *Version: 1.0, Last updated: 10/7/2009*
+// 
+// Project Home - http://benalman.com/projects/jquery-urlinternal-plugin/
+// GitHub       - http://github.com/cowboy/jquery-urlinternal/
+// Source       - http://github.com/cowboy/jquery-urlinternal/raw/master/jquery.ba-urlinternal.js
+// (Minified)   - http://github.com/cowboy/jquery-urlinternal/raw/master/jquery.ba-urlinternal.min.js (1.7kb)
+// 
+// About: License
+// 
+// Copyright (c) 2009 "Cowboy" Ben Alman,
+// Dual licensed under the MIT and GPL licenses.
+// http://benalman.com/about/license/
+// 
+// About: Examples
+// 
+// This working example, complete with fully commented code, illustrates a few
+// ways in which this plugin can be used.
+// 
+// http://benalman.com/code/projects/jquery-urlinternal/examples/urlinternal/
+// 
+// About: Support and Testing
+// 
+// Information about what version or versions of jQuery this plugin has been
+// tested with, what browsers it has been tested in, and where the unit tests
+// reside (so you can test it yourself).
+// 
+// jQuery Versions - 1.3.2
+// Browsers Tested - Internet Explorer 6-8, Firefox 2-3.7, Safari 3-4, Chrome, Opera 9.6-10.
+// Unit Tests      - http://benalman.com/code/projects/jquery-urlinternal/unit/
+// 
+// About: Release History
+// 
+// 1.0 - (10/7/2009) Initial release
+
+(function($){
+  '$:nomunge'; // Used by YUI compressor.
+  
+  // Some convenient shortcuts.
+  var undefined,
+    TRUE = !0,
+    FALSE = !1,
+    loc = window.location,
+    aps = Array.prototype.slice,
+    
+    matches = loc.href.match( /^((https?:\/\/.*?\/)?[^#]*)#?.*$/ ),
+    loc_fragbase = matches[1] + '#',
+    loc_hostbase = matches[2],
+    
+    // Method references.
+    jq_elemUrlAttr,
+    jq_urlInternalHost,
+    jq_urlInternalRegExp,
+    jq_isUrlInternal,
+    jq_isUrlExternal,
+    jq_isUrlFragment,
+    
+    // Reused strings.
+    str_elemUrlAttr = 'elemUrlAttr',
+    str_href = 'href',
+    str_src = 'src',
+    str_urlInternal = 'urlInternal',
+    str_urlExternal = 'urlExternal',
+    str_urlFragment = 'urlFragment',
+    
+    url_regexp,
+    
+    // Used by jQuery.elemUrlAttr.
+    elemUrlAttr_cache = {};
+  
+  // Why write the same function twice? Let's curry! Mmmm, curry..
+  
+  function curry( func ) {
+    var args = aps.call( arguments, 1 );
+    
+    return function() {
+      return func.apply( this, args.concat( aps.call( arguments ) ) );
+    };
+  };
+  
+  // Section: Methods
+  // 
+  // Method: jQuery.isUrlInternal
+  // 
+  // Test whether or not a URL is internal. Non-navigating URLs (ie. #anchor,
+  // javascript:, mailto:, news:, tel:, im: or non-http/https protocol://
+  // links) are not considered internal.
+  // 
+  // Usage:
+  // 
+  // > jQuery.isUrlInternal( url );
+  // 
+  // Arguments:
+  // 
+  //   url - (String) a URL to test the internal-ness of.
+  // 
+  // Returns:
+  // 
+  //  (Boolean) true if the URL is internal, false if external, or undefined if
+  //  the URL is non-navigating.
+  
+  $.isUrlInternal = jq_isUrlInternal = function( url ) {
+    
+    // non-navigating: url is nonexistent or a fragment
+    if ( !url || jq_isUrlFragment( url ) ) { return undefined; }
+    
+    // internal: url is absolute-but-internal (see $.urlInternalRegExp)
+    if ( url_regexp.test(url) ) { return TRUE; }
+    
+    // external: url is absolute (begins with http:// or https:// or //)
+    if ( /^(?:https?:)?\/\//i.test(url) ) { return FALSE; }
+    
+    // non-navigating: url begins with scheme:
+    if ( /^[a-z\d.-]+:/i.test(url) ) { return undefined; }
+    
+    return TRUE;
+  };
+  
+  // Method: jQuery.isUrlExternal
+  // 
+  // Test whether or not a URL is external. Non-navigating URLs (ie. #anchor,
+  // mailto:, javascript:, or non-http/https protocol:// links) are not
+  // considered external.
+  // 
+  // Usage:
+  // 
+  // > jQuery.isUrlExternal( url );
+  // 
+  // Arguments:
+  // 
+  //   url - (String) a URL to test the external-ness of.
+  // 
+  // Returns:
+  // 
+  //  (Boolean) true if the URL is external, false if internal, or undefined if
+  //  the URL is non-navigating.
+  
+  $.isUrlExternal = jq_isUrlExternal = function( url ) {
+    var result = jq_isUrlInternal( url );
+    
+    return typeof result === 'boolean'
+      ? !result
+      : result;
+  };
+  
+  // Method: jQuery.isUrlFragment
+  // 
+  // Test whether or not a URL is a fragment in the context of the current page,
+  // meaning the URL can either begin with # or be a partial URL or full URI,
+  // but when it is navigated to, only the document.location.hash will change,
+  // and the page will not reload.
+  // 
+  // Usage:
+  // 
+  // > jQuery.isUrlFragment( url );
+  // 
+  // Arguments:
+  // 
+  //   url - (String) a URL to test the fragment-ness of.
+  // 
+  // Returns:
+  // 
+  //  (Boolean) true if the URL is a fragment, false otherwise.
+  
+  $.isUrlFragment = jq_isUrlFragment = function( url ) {
+    var matches = ( url || '' ).match( /^([^#]?)([^#]*#).*$/ );
+    
+    // url *might* be a fragment, since there were matches.
+    return !!matches && (
+      
+      // url is just a fragment.
+      matches[2] === '#'
+      
+      // url is absolute and contains a fragment, but is otherwise the same URI.
+      || url.indexOf( loc_fragbase ) === 0
+      
+      // url is relative, begins with '/', contains a fragment, and is otherwise
+      // the same URI.
+      || ( matches[1] === '/' ? loc_hostbase + matches[2] === loc_fragbase
+      
+      // url is relative, but doesn't begin with '/', contains a fragment, and
+      // is otherwise the same URI. This isn't even remotely efficient, but it's
+      // significantly less code than parsing everything. Besides, it will only
+      // even be tested on url values that contain '#', aren't absolute, and
+      // don't begin with '/', which is not going to be many of them.
+      : !/^https?:\/\//i.test( url ) && $('<a href="' + url + '"/>')[0].href.indexOf( loc_fragbase ) === 0 )
+    );
+  };
+  
+  // Method: jQuery.fn.urlInternal
+  // 
+  // Filter a jQuery collection of elements, returning only elements that have
+  // an internal URL (as determined by <jQuery.isUrlInternal>). If URL cannot
+  // be determined, remove the element from the collection.
+  // 
+  // Usage:
+  // 
+  // > jQuery('selector').urlInternal( [ attr ] );
+  // 
+  // Arguments:
+  // 
+  //  attr - (String) Optional name of an attribute that will contain a URL to
+  //    test internal-ness against. See <jQuery.elemUrlAttr> for a list of
+  //    default attributes.
+  // 
+  // Returns:
+  // 
+  //  (jQuery) A filtered jQuery collection of elements.
+  
+  // Method: jQuery.fn.urlExternal
+  // 
+  // Filter a jQuery collection of elements, returning only elements that have
+  // an external URL (as determined by <jQuery.isUrlExternal>). If URL cannot
+  // be determined, remove the element from the collection.
+  // 
+  // Usage:
+  // 
+  // > jQuery('selector').urlExternal( [ attr ] );
+  // 
+  // Arguments:
+  // 
+  //  attr - (String) Optional name of an attribute that will contain a URL to
+  //    test external-ness against. See <jQuery.elemUrlAttr> for a list of
+  //    default attributes.
+  // 
+  // Returns:
+  // 
+  //  (jQuery) A filtered jQuery collection of elements.
+  
+  // Method: jQuery.fn.urlFragment
+  // 
+  // Filter a jQuery collection of elements, returning only elements that have
+  // an fragment URL (as determined by <jQuery.isUrlFragment>). If URL cannot
+  // be determined, remove the element from the collection.
+  // 
+  // Note that in most browsers, selecting $("a[href^=#]") is reliable, but this
+  // doesn't always work in IE6/7! In order to properly test whether a URL
+  // attribute's value is a fragment in the context of the current page, you can
+  // either make your selector a bit more complicated.. or use .urlFragment!
+  // 
+  // Usage:
+  // 
+  // > jQuery('selector').urlFragment( [ attr ] );
+  // 
+  // Arguments:
+  // 
+  //  attr - (String) Optional name of an attribute that will contain a URL to
+  //    test external-ness against. See <jQuery.elemUrlAttr> for a list of
+  //    default attributes.
+  // 
+  // Returns:
+  // 
+  //  (jQuery) A filtered jQuery collection of elements.
+  
+  function fn_filter( str, attr ) {
+    return this.filter( ':' + str + (attr ? '(' + attr + ')' : '') );
+  };
+  
+  $.fn[ str_urlInternal ] = curry( fn_filter, str_urlInternal );
+  $.fn[ str_urlExternal ] = curry( fn_filter, str_urlExternal );
+  $.fn[ str_urlFragment ] = curry( fn_filter, str_urlFragment );
+  
+  // Section: Selectors
+  // 
+  // Selector: :urlInternal
+  // 
+  // Filter a jQuery collection of elements, returning only elements that have
+  // an internal URL (as determined by <jQuery.isUrlInternal>). If URL cannot
+  // be determined, remove the element from the collection.
+  // 
+  // Usage:
+  // 
+  // > jQuery('selector').filter(':urlInternal');
+  // > jQuery('selector').filter(':urlInternal(attr)');
+  // 
+  // Arguments:
+  // 
+  //  attr - (String) Optional name of an attribute that will contain a URL to
+  //    test internal-ness against. See <jQuery.elemUrlAttr> for a list of
+  //    default attributes.
+  // 
+  // Returns:
+  // 
+  //  (jQuery) A filtered jQuery collection of elements.
+  
+  // Selector: :urlExternal
+  // 
+  // Filter a jQuery collection of elements, returning only elements that have
+  // an external URL (as determined by <jQuery.isUrlExternal>). If URL cannot
+  // be determined, remove the element from the collection.
+  // 
+  // Usage:
+  // 
+  // > jQuery('selector').filter(':urlExternal');
+  // > jQuery('selector').filter(':urlExternal(attr)');
+  // 
+  // Arguments:
+  // 
+  //  attr - (String) Optional name of an attribute that will contain a URL to
+  //    test external-ness against. See <jQuery.elemUrlAttr> for a list of
+  //    default attributes.
+  // 
+  // Returns:
+  // 
+  //  (jQuery) A filtered jQuery collection of elements.
+  
+  // Selector: :urlFragment
+  // 
+  // Filter a jQuery collection of elements, returning only elements that have
+  // an fragment URL (as determined by <jQuery.isUrlFragment>). If URL cannot
+  // be determined, remove the element from the collection.
+  // 
+  // Note that in most browsers, selecting $("a[href^=#]") is reliable, but this
+  // doesn't always work in IE6/7! In order to properly test whether a URL
+  // attribute's value is a fragment in the context of the current page, you can
+  // either make your selector a bit more complicated.. or use :urlFragment!
+  // 
+  // Usage:
+  // 
+  // > jQuery('selector').filter(':urlFragment');
+  // > jQuery('selector').filter(':urlFragment(attr)');
+  // 
+  // Arguments:
+  // 
+  //  attr - (String) Optional name of an attribute that will contain a URL to
+  //    test fragment-ness against. See <jQuery.elemUrlAttr> for a list of
+  //    default attributes.
+  // 
+  // Returns:
+  // 
+  //  (jQuery) A filtered jQuery collection of elements.
+  
+  function fn_selector( func, elem, i, match ) {
+    var a = match[3] || jq_elemUrlAttr()[ ( elem.nodeName || '' ).toLowerCase() ] || '';
+    
+    return a ? !!func( elem.getAttribute( a ) ) : FALSE;
+  };
+  
+  $.expr[':'][ str_urlInternal ] = curry( fn_selector, jq_isUrlInternal );
+  $.expr[':'][ str_urlExternal ] = curry( fn_selector, jq_isUrlExternal );
+  $.expr[':'][ str_urlFragment ] = curry( fn_selector, jq_isUrlFragment );
+  
+  // Section: Support methods
+  // 
+  // Method: jQuery.elemUrlAttr
+  // 
+  // Get the internal "Default URL attribute per tag" list, or augment the list
+  // with additional tag-attribute pairs, in case the defaults are insufficient.
+  // 
+  // In the <jQuery.fn.urlInternal> and <jQuery.fn.urlExternal> methods, as well
+  // as the <:urlInternal> and <:urlExternal> selectors, this list is used to
+  // determine which attribute contains the URL to be modified, if an "attr"
+  // param is not specified.
+  // 
+  // Default Tag-Attribute List:
+  // 
+  //  a      - href
+  //  base   - href
+  //  iframe - src
+  //  img    - src
+  //  input  - src
+  //  form   - action
+  //  link   - href
+  //  script - src
+  // 
+  // Usage:
+  // 
+  // > jQuery.elemUrlAttr( [ tag_attr ] );
+  // 
+  // Arguments:
+  // 
+  //  tag_attr - (Object) An object containing a list of tag names and their
+  //    associated default attribute names in the format { tag: 'attr', ... } to
+  //    be merged into the internal tag-attribute list.
+  // 
+  // Returns:
+  // 
+  //  (Object) An object containing all stored tag-attribute values.
+  
+  // Only define function and set defaults if function doesn't already exist, as
+  // the jQuery BBQ plugin will provide this method as well.
+  $[ str_elemUrlAttr ] || ($[ str_elemUrlAttr ] = function( obj ) {
+    return $.extend( elemUrlAttr_cache, obj );
+  })({
+    a: str_href,
+    base: str_href,
+    iframe: str_src,
+    img: str_src,
+    input: str_src,
+    form: 'action',
+    link: str_href,
+    script: str_src
+  });
+  
+  jq_elemUrlAttr = $[ str_elemUrlAttr ];
+  
+  // Method: jQuery.urlInternalHost
+  // 
+  // Constructs the regular expression that matches an absolute-but-internal
+  // URL from the current page's protocol, hostname and port, allowing for any
+  // number of optional hostnames. For example, if the current page is
+  // http://benalman.com/test or http://www.benalman.com/test, specifying an
+  // argument of "www" would yield this pattern:
+  // 
+  // > /^(?:http:)?\/\/(?:(?:www)\.)?benalman.com\//i
+  // 
+  // This pattern will match URLs beginning with both http://benalman.com/ and
+  // http://www.benalman.com/. If the current page is http://benalman.com/test,
+  // http://www.benalman.com/test or http://foo.benalman.com/test, specifying
+  // arguments "www", "foo" would yield this pattern:
+  // 
+  // > /^(?:http:)?\/\/(?:(?:www|foo)\.)?benalman.com\//i
+  // 
+  // This pattern will match URLs beginning with http://benalman.com/,
+  // http://www.benalman.com/ and http://foo.benalman.com/.
+  // 
+  // Not specifying any alt_hostname will disable any alt-hostname matching.
+  // 
+  // Note that the plugin is initialized by default to an alt_hostname of "www".
+  // Should you need more control, <jQuery.urlInternalRegExp> may be used to
+  // completely customize the absolute-but-internal matching pattern.
+  // 
+  // Usage:
+  // 
+  // > jQuery.urlInternalHost( [ alt_hostname [, alt_hostname ] ... ] );
+  // 
+  // Arguments:
+  // 
+  //  alt_hostname - (String) An optional alternate hostname to use when testing
+  //    URL absolute-but-internal-ness. 
+  // 
+  // Returns:
+  // 
+  //  (RegExp) The absolute-but-internal pattern, as a RegExp.
+  
+  $.urlInternalHost = jq_urlInternalHost = function( alt_hostname ) {
+    alt_hostname = alt_hostname
+      ? '(?:(?:' + Array.prototype.join.call( arguments, '|' ) + ')\\.)?'
+      : '';
+    
+    var re = new RegExp( '^' + alt_hostname + '(.*)', 'i' ),
+      pattern = '^(?:' + loc.protocol + ')?//'
+        + loc.hostname.replace(re, alt_hostname + '$1').replace( /\\?\./g, '\\.' )
+        + (loc.port ? ':' + loc.port : '') + '/';
+    
+    return jq_urlInternalRegExp( pattern );
+  };
+    
+  // Method: jQuery.urlInternalRegExp
+  // 
+  // Set or get the regular expression that matches an absolute-but-internal
+  // URL.
+  // 
+  // Usage:
+  // 
+  // > jQuery.urlInternalRegExp( [ re ] );
+  // 
+  // Arguments:
+  // 
+  //  re - (String or RegExp) The regular expression pattern. If not passed,
+  //    nothing is changed.
+  // 
+  // Returns:
+  // 
+  //  (RegExp) The absolute-but-internal pattern, as a RegExp.
+  
+  $.urlInternalRegExp = jq_urlInternalRegExp = function( re ) {
+    if ( re ) {
+      url_regexp = typeof re === 'string'
+        ? new RegExp( re, 'i' )
+        : re;
+    }
+    
+    return url_regexp;
+  };
+  
+  // Initialize url_regexp with a reasonable default.
+  jq_urlInternalHost( 'www' );
+  
+})(jQuery);
+;
+/*!
+ * fancyBox - jQuery Plugin
+ * version: 2.0.5 (21/03/2012)
+ * @requires jQuery v1.6 or later
+ *
+ * Examples at http://fancyapps.com/fancybox/
+ * License: www.fancyapps.com/fancybox/#license
+ *
+ * Copyright 2012 Janis Skarnelis - janis@fancyapps.com
+ *
+ */
+(function (window, document, undefined) {
+	"use strict";
+
+	var $ = window.jQuery,
+		W = $(window),
+		D = $(document),
+		F = $.fancybox = function () {
+			F.open.apply( this, arguments );
+		},
+		didResize = false,
+		resizeTimer = null,
+		isMobile = document.createTouch !== undefined,
+		isString = function(str) {
+			return $.type(str) === "string";
+		},
+		isPercentage = function(str) {
+			return isString(str) && str.indexOf('%') > -1;
+		};
+
+	$.extend(F, {
+		// The current version of fancyBox
+		version: '2.0.5',
+
+		defaults: {
+			padding: 15,
+			margin: 20,
+
+			width: 800,
+			height: 600,
+			minWidth: 100,
+			minHeight: 100,
+			maxWidth: 9999,
+			maxHeight: 9999,
+
+			autoSize: true,
+			autoResize: !isMobile,
+			autoCenter : !isMobile,
+			fitToView: true,
+			aspectRatio: false,
+			topRatio: 0.5,
+
+			fixed: !($.browser.msie && $.browser.version <= 6) && !isMobile,
+			scrolling: 'auto', // 'auto', 'yes' or 'no'
+			wrapCSS: 'fancybox-default',
+
+			arrows: true,
+			closeBtn: true,
+			closeClick: false,
+			nextClick : false,
+			mouseWheel: true,
+			autoPlay: false,
+			playSpeed: 3000,
+			preload : 3,
+
+			modal: false,
+			loop: true,
+			ajax: { dataType: 'html', headers: { 'X-fancyBox': true } },
+			keys: {
+				next: [13, 32, 34, 39, 40], // enter, space, page down, right arrow, down arrow
+				prev: [8, 33, 37, 38], // backspace, page up, left arrow, up arrow
+				close: [27] // escape key
+			},
+
+			// Override some properties
+			index: 0,
+			type: null,
+			href: null,
+			content: null,
+			title: null,
+
+			// HTML templates
+			tpl: {
+				wrap: '<div class="fancybox-wrap"><div class="fancybox-outer"><div class="fancybox-inner"></div></div></div>',
+				image: '<img class="fancybox-image" src="{href}" alt="" />',
+				iframe: '<iframe class="fancybox-iframe" name="fancybox-frame{rnd}" frameborder="0" hspace="0"' + ($.browser.msie ? ' allowtransparency="true"' : '') + '></iframe>',
+				swf: '<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" width="100%" height="100%"><param name="wmode" value="transparent" /><param name="allowfullscreen" value="true" /><param name="allowscriptaccess" value="always" /><param name="movie" value="{href}" /><embed src="{href}" type="application/x-shockwave-flash" allowfullscreen="true" allowscriptaccess="always" width="100%" height="100%" wmode="transparent"></embed></object>',
+				error: '<p class="fancybox-error">The requested content cannot be loaded.<br/>Please try again later.</p>',
+				closeBtn: '<div title="Close" class="fancybox-item fancybox-close"></div>',
+				next: '<a title="Next" class="fancybox-nav fancybox-next"><span></span></a>',
+				prev: '<a title="Previous" class="fancybox-nav fancybox-prev"><span></span></a>'
+			},
+
+			// Properties for each animation type
+			// Opening fancyBox
+			openEffect: 'fade', // 'elastic', 'fade' or 'none'
+			openSpeed: 250,
+			openEasing: 'swing',
+			openOpacity: true,
+			openMethod: 'zoomIn',
+
+			// Closing fancyBox
+			closeEffect: 'fade', // 'elastic', 'fade' or 'none'
+			closeSpeed: 250,
+			closeEasing: 'swing',
+			closeOpacity: true,
+			closeMethod: 'zoomOut',
+
+			// Changing next gallery item
+			nextEffect: 'elastic', // 'elastic', 'fade' or 'none'
+			nextSpeed: 300,
+			nextEasing: 'swing',
+			nextMethod: 'changeIn',
+
+			// Changing previous gallery item
+			prevEffect: 'elastic', // 'elastic', 'fade' or 'none'
+			prevSpeed: 300,
+			prevEasing: 'swing',
+			prevMethod: 'changeOut',
+
+			// Enabled helpers
+			helpers: {
+				overlay: {
+					speedIn: 0,
+					speedOut: 300,
+					opacity: 0.8,
+					css: {
+						cursor: 'pointer'
+					},
+					closeClick: true
+				},
+				title: {
+					type: 'float' // 'float', 'inside', 'outside' or 'over'
+				}
+			},
+
+			// Callbacks
+			onCancel: $.noop, // If canceling
+			beforeLoad: $.noop, // Before loading
+			afterLoad: $.noop, // After loading
+			beforeShow: $.noop, // Before changing in current item
+			afterShow: $.noop, // After opening
+			beforeClose: $.noop, // Before closing
+			afterClose: $.noop // After closing
+		},
+
+		//Current state
+		group: {}, // Selected group
+		opts: {}, // Group options
+		coming: null, // Element being loaded
+		current: null, // Currently loaded element
+		isOpen: false, // Is currently open
+		isOpened: false, // Have been fully opened at least once
+		wrap: null,
+		outer: null,
+		inner: null,
+
+		player: {
+			timer: null,
+			isActive: false
+		},
+
+		// Loaders
+		ajaxLoad: null,
+		imgPreload: null,
+
+		// Some collections
+		transitions: {},
+		helpers: {},
+
+		/*
+		 *	Static methods
+		 */
+
+		open: function (group, opts) {
+			//Kill existing instances
+			F.close(true);
+
+			//Normalize group
+			if (group && !$.isArray(group)) {
+				group = group instanceof $ ? $(group).get() : [group];
+			}
+
+			F.isActive = true;
+
+			//Extend the defaults
+			F.opts = $.extend(true, {}, F.defaults, opts);
+
+			//All options are merged recursive except keys
+			if ($.isPlainObject(opts) && opts.keys !== undefined) {
+				F.opts.keys = opts.keys ? $.extend({}, F.defaults.keys, opts.keys) : false;
+			}
+
+			F.group = group;
+
+			F._start(F.opts.index || 0);
+		},
+
+		cancel: function () {
+			if (F.coming && false === F.trigger('onCancel')) {
+				return;
+			}
+
+			F.coming = null;
+
+			F.hideLoading();
+
+			if (F.ajaxLoad) {
+				F.ajaxLoad.abort();
+			}
+
+			F.ajaxLoad = null;
+
+			if (F.imgPreload) {
+				F.imgPreload.onload = F.imgPreload.onabort = F.imgPreload.onerror = null;
+			}
+		},
+
+		close: function (a) {
+			F.cancel();
+
+			if (!F.current || false === F.trigger('beforeClose')) {
+				return;
+			}
+
+			F.unbindEvents();
+
+			//If forced or is still opening then remove immediately
+			if (!F.isOpen || (a && a[0] === true)) {
+				$(".fancybox-wrap").stop().trigger('onReset').remove();
+
+				F._afterZoomOut();
+
+			} else {
+				F.isOpen = F.isOpened = false;
+
+				$(".fancybox-item, .fancybox-nav").remove();
+
+				F.wrap.stop(true).removeClass('fancybox-opened');
+				F.inner.css('overflow', 'hidden');
+
+				F.transitions[F.current.closeMethod]();
+			}
+		},
+
+		// Start/stop slideshow
+		play: function (a) {
+			var clear = function () {
+					clearTimeout(F.player.timer);
+				},
+				set = function () {
+					clear();
+
+					if (F.current && F.player.isActive) {
+						F.player.timer = setTimeout(F.next, F.current.playSpeed);
+					}
+				},
+				stop = function () {
+					clear();
+
+					$('body').unbind('.player');
+
+					F.player.isActive = false;
+
+					F.trigger('onPlayEnd');
+				},
+				start = function () {
+					if (F.current && (F.current.loop || F.current.index < F.group.length - 1)) {
+						F.player.isActive = true;
+
+						$('body').bind({
+							'afterShow.player onUpdate.player': set,
+							'onCancel.player beforeClose.player': stop,
+							'beforeLoad.player': clear
+						});
+
+						set();
+
+						F.trigger('onPlayStart');
+					}
+				};
+
+			if (F.player.isActive || (a && a[0] === false)) {
+				stop();
+			} else {
+				start();
+			}
+		},
+
+		next: function () {
+			if (F.current) {
+				F.jumpto(F.current.index + 1);
+			}
+		},
+
+		prev: function () {
+			if (F.current) {
+				F.jumpto(F.current.index - 1);
+			}
+		},
+
+		jumpto: function (index) {
+			if (!F.current) {
+				return;
+			}
+
+			index = parseInt(index, 10);
+
+			if (F.group.length > 1 && F.current.loop) {
+				if (index >= F.group.length) {
+					index = 0;
+
+				} else if (index < 0) {
+					index = F.group.length - 1;
+				}
+			}
+
+			if (F.group[index] !== undefined) {
+				F.cancel();
+
+				F._start(index);
+			}
+		},
+
+		reposition: function (absolute, e) {
+			if (F.isOpen) {
+				if (e && e.type === 'scroll') {
+					F.wrap.stop().animate(F._getPosition(absolute), 200);
+				} else {
+					F.wrap.css(F._getPosition(absolute));
+				}
+			}
+		},
+
+		update: function (e) {
+			if (F.isOpen) {
+				// It's a very bad idea to attach handlers to the window scroll event, run this code after a delay
+				if (!didResize) {
+					resizeTimer = setTimeout(function () {
+						var current = F.current;
+
+						if (didResize) {
+							didResize = false;
+
+							if (current) {
+								if (!e || (e && (e.type === 'orientationchange' || (current.autoResize && e.type === 'resize')))) {
+									if (current.autoSize && current.type !== 'iframe') {
+										F.inner.height('auto');
+										current.height = F.inner.height();
+									}
+
+									F._setDimension();
+
+									if (current.canGrow && current.type !== 'iframe') {
+										F.inner.height('auto');
+									}
+								}
+
+								if (current.autoCenter) {
+									F.reposition(null, e);
+								}
+
+								F.trigger('onUpdate');
+							}
+						}
+					}, 100);
+				}
+
+				didResize = true;
+			}
+		},
+
+		toggle: function () {
+			if (F.isOpen) {
+				F.current.fitToView = !F.current.fitToView;
+
+				F.update();
+			}
+		},
+
+		hideLoading: function () {
+			D.unbind('keypress.fb');
+
+			$("#fancybox-loading").remove();
+		},
+
+		showLoading: function () {
+			F.hideLoading();
+
+			//If user will press the escape-button, the request will be canceled
+			D.bind('keypress.fb', function(e) {
+				if (e.keyCode === 27) {
+					e.preventDefault();
+					F.cancel();
+				}
+			});
+
+			$('<div id="fancybox-loading"><div></div></div>').click(F.cancel).appendTo('body');
+		},
+
+		getViewport: function () {
+			var de = document.documentElement,
+				width = window.innerWidth || self.innerWidth || (de && de.clientWidth) || document.body.clientWidth,
+				height = window.innerHeight || self.innerHeight || (de && de.clientHeight) || document.body.clientHeight;
+
+			return {
+				x: W.scrollLeft(),
+				y: W.scrollTop(),
+				w: width,
+				h: height
+			};
+		},
+
+		// Unbind the keyboard / clicking actions
+		unbindEvents: function () {
+			if (F.wrap) {
+				F.wrap.unbind('.fb');
+			}
+
+			D.unbind('.fb');
+			W.unbind('.fb');
+		},
+
+		bindEvents: function () {
+			var current = F.current,
+				keys = current.keys;
+
+			if (!current) {
+				return;
+			}
+
+			W.bind('resize.fb, orientationchange.fb', F.update);
+
+			if (!current.fixed && current.autoCenter) {
+				W.bind("scroll.fb", F.update);
+			}
+
+			if (keys) {
+				D.bind('keydown.fb', function (e) {
+					var code;
+
+					// Ignore key combinations and key events within form elements
+					if (!e.ctrlKey && !e.altKey && !e.shiftKey && !e.metaKey && $.inArray(e.target.tagName.toLowerCase(), ['input', 'textarea', 'select', 'button']) < 0 && !$(e.target).is('[contenteditable]')) {
+						code = e.keyCode;
+
+						if ($.inArray(code, keys.close) > -1) {
+							F.close();
+							e.preventDefault();
+
+						} else if ($.inArray(code, keys.next) > -1) {
+							F.next();
+							e.preventDefault();
+
+						} else if ($.inArray(code, keys.prev) > -1) {
+							F.prev();
+							e.preventDefault();
+						}
+					}
+				});
+			}
+
+			if ($.fn.mousewheel && current.mouseWheel && F.group.length > 1) {
+				F.wrap.bind('mousewheel.fb', function (e, delta) {
+					var target = e.target || null;
+
+					if (delta !== 0 && (!target || target.clientHeight === 0 || (target.scrollHeight === target.clientHeight && target.scrollWidth === target.clientWidth))) {
+						e.preventDefault();
+
+						F[delta > 0 ? 'prev' : 'next']();
+					}
+				});
+			}
+		},
+
+		trigger: function (event) {
+			var ret, obj = F[ $.inArray(event, ['onCancel', 'beforeLoad', 'afterLoad']) > -1 ? 'coming' : 'current' ];
+
+			if (!obj) {
+				return;
+			}
+
+			if ($.isFunction( obj[event] )) {
+				ret = obj[event].apply(obj, Array.prototype.slice.call(arguments, 1));
+			}
+
+			if (ret === false) {
+				return false;
+			}
+
+			if (obj.helpers) {
+				$.each(obj.helpers, function (helper, opts) {
+					if (opts && $.isPlainObject(F.helpers[helper]) && $.isFunction(F.helpers[helper][event])) {
+						F.helpers[helper][event](opts, obj);
+					}
+				});
+			}
+
+			$.event.trigger(event + '.fb');
+		},
+
+		isImage: function (str) {
+			return isString(str) && str.match(/\.(jpg|gif|png|bmp|jpeg)(.*)?$/i);
+		},
+
+		isSWF: function (str) {
+			return isString(str) && str.match(/\.(swf)(.*)?$/i);
+		},
+
+		_start: function (index) {
+			var coming = {},
+				element = F.group[index] || null,
+				isDom,
+				href,
+				type,
+				rez,
+				hrefParts;
+
+			if (element && (element.nodeType || element instanceof $)) {
+				isDom = true;
+
+				if ($.metadata) {
+					coming = $(element).metadata();
+				}
+			}
+
+			coming = $.extend(true, {}, F.opts, {index : index, element : element}, ($.isPlainObject(element) ? element : coming));
+
+			// Re-check overridable options
+			$.each(['href', 'title', 'content', 'type'], function(i,v) {
+				coming[v] = F.opts[ v ] || (isDom && $(element).attr( v )) || coming[ v ] || null;
+			});
+
+			// Convert margin property to array - top, right, bottom, left
+			if (typeof coming.margin === 'number') {
+				coming.margin = [coming.margin, coming.margin, coming.margin, coming.margin];
+			}
+
+			// 'modal' propery is just a shortcut
+			if (coming.modal) {
+				$.extend(true, coming, {
+					closeBtn : false,
+					closeClick: false,
+					nextClick : false,
+					arrows : false,
+					mouseWheel : false,
+					keys : null,
+					helpers: {
+						overlay : {
+							css: {
+								cursor : 'auto'
+							},
+							closeClick : false
+						}
+					}
+				});
+			}
+
+			//Give a chance for callback or helpers to update coming item (type, title, etc)
+			F.coming = coming;
+
+			if (false === F.trigger('beforeLoad')) {
+				F.coming = null;
+				return;
+			}
+
+			type = coming.type;
+			href = coming.href || element;
+
+			///Check if content type is set, if not, try to get
+			if (!type) {
+				if (isDom) {
+					rez = $(element).data('fancybox-type');
+
+					if (!rez && element.className) {
+						rez = element.className.match(/fancybox\.(\w+)/);
+						type = rez ? rez[1] : null;
+					}
+				}
+
+				if (!type && isString(href)) {
+					if (F.isImage(href)) {
+						type = 'image';
+
+					} else if (F.isSWF(href)) {
+						type = 'swf';
+
+					} else if (href.match(/^#/)) {
+						type = 'inline';
+					}
+				}
+
+				// ...if not - display element itself
+				if (!type) {
+					type = isDom ? 'inline' : 'html';
+				}
+
+				coming.type = type;
+			}
+
+			// Check before try to load; 'inline' and 'html' types need content, others - href
+			if (type === 'inline' || type === 'html') {
+				if (!coming.content) {
+					if (type === 'inline') {
+						coming.content = $( isString(href) ? href.replace(/.*(?=#[^\s]+$)/, '') : href ); //strip for ie7
+
+					} else {
+						coming.content = element;
+					}
+				}
+
+				if (!coming.content || !coming.content.length) {
+					type = null;
+				}
+
+			} else if (!href) {
+				type = null;
+			}
+
+			/*
+			 * Add reference to the group, so it`s possible to access from callbacks, example:
+			 * afterLoad : function() {
+			 * 	this.title = 'Image ' + (this.index + 1) + ' of ' + this.group.length + (this.title ? ' - ' + this.title : '');
+			 * }
+			 */
+
+			if (type === 'ajax' && isString(href)) {
+				hrefParts = href.split(/\s+/, 2);
+
+				href = hrefParts.shift();
+				coming.selector = hrefParts.shift();
+			}
+
+			coming.href = href;
+			coming.group = F.group;
+			coming.isDom = isDom;
+
+			if (type === 'image') {
+				F._loadImage();
+
+			} else if (type === 'ajax') {
+				F._loadAjax();
+
+			} else if (type) {
+				F._afterLoad();
+
+			} else {
+				F._error( 'type' );
+			}
+		},
+
+		_error: function ( type ) {
+			F.hideLoading();
+
+			$.extend(F.coming, {
+				type : 'html',
+				autoSize : true,
+				minHeight : 0,
+				hasError : type,
+				content : F.coming.tpl.error
+			});
+
+			F._afterLoad();
+		},
+
+		_loadImage: function () {
+			// Reset preload image so it is later possible to check "complete" property
+			var img = F.imgPreload = new Image();
+
+			img.onload = function () {
+				this.onload = this.onerror = null;
+
+				F.coming.width = this.width;
+				F.coming.height = this.height;
+
+				F._afterLoad();
+			};
+
+			img.onerror = function () {
+				this.onload = this.onerror = null;
+
+				F._error( 'image' );
+			};
+
+			img.src = F.coming.href;
+
+			if (!img.width) {
+				F.showLoading();
+			}
+		},
+
+		_loadAjax: function () {
+			F.showLoading();
+
+			F.ajaxLoad = $.ajax($.extend({}, F.coming.ajax, {
+				url: F.coming.href,
+				error: function (jqXHR, textStatus) {
+					if (F.coming && textStatus !== 'abort') {
+						F._error( 'ajax', jqXHR );
+
+					} else {
+						F.hideLoading();
+					}
+				},
+				success: function (data, textStatus) {
+					if (textStatus === 'success') {
+						F.coming.content = data;
+
+						F._afterLoad();
+					}
+				}
+			}));
+		},
+
+		_preloadImages: function() {
+			var group = F.group,
+				current = F.current,
+				len = group.length,
+				item,
+				href,
+				i,
+				cnt = Math.min(current.preload, len - 1);
+
+			if (!current.preload || group.length < 2) {
+				return;
+			}
+
+			for (i = 1; i <= cnt; i += 1) {
+				item = group[ (current.index + i ) % len ];
+				href = $( item ).attr('href') || item;
+
+				if (item.type === 'image' || F.isImage(href)) {
+					new Image().src = href;
+				}
+			}
+		},
+
+		_afterLoad: function () {
+			F.hideLoading();
+
+			if (!F.coming || false === F.trigger('afterLoad', F.current)) {
+				F.coming = false;
+
+				return;
+			}
+
+			if (F.isOpened) {
+				$(".fancybox-item").remove();
+
+				F.wrap.stop(true).removeClass('fancybox-opened');
+				F.inner.css('overflow', 'hidden');
+
+				F.transitions[F.current.prevMethod]();
+
+			} else {
+				$(".fancybox-wrap").stop().trigger('onReset').remove();
+
+				F.trigger('afterClose');
+			}
+
+			F.unbindEvents();
+
+			F.isOpen = false;
+			F.current = F.coming;
+
+			//Build the neccessary markup
+			F.wrap = $(F.current.tpl.wrap).addClass('fancybox-' + (isMobile ? 'mobile' : 'desktop') + ' fancybox-type-' + F.current.type + ' fancybox-tmp ' + F.current.wrapCSS).appendTo('body');
+			F.outer = $('.fancybox-outer', F.wrap).css('padding', F.current.padding + 'px');
+			F.inner = $('.fancybox-inner', F.wrap);
+
+			F._setContent();
+		},
+
+		_setContent: function () {
+			var current = F.current,
+				content = current.content,
+				type = current.type,
+				loadingBay,
+				minWidth = current.minWidth,
+				minHeight = current.minHeight,
+				maxWidth = current.maxWidth,
+				maxHeight = current.maxHeight;
+
+			switch (type) {
+				case 'inline':
+				case 'ajax':
+				case 'html':
+					if (current.selector) {
+						content = $('<div>').html(content).find(current.selector);
+
+					} else if (content instanceof $) {
+						if (content.parent().hasClass('fancybox-inner')) {
+							content.parents('.fancybox-wrap').unbind('onReset');
+						}
+
+						content = content.show().detach();
+
+						$(F.wrap).bind('onReset', function () {
+							content.appendTo('body').hide();
+						});
+					}
+
+					if (current.autoSize) {
+						loadingBay = $('<div class="fancybox-wrap ' + F.current.wrapCSS + ' fancybox-tmp"></div>')
+							.appendTo('body')
+							.css({
+								minWidth : isPercentage(minWidth) ? minWidth : minWidth + 'px',
+								minHeight : isPercentage(minHeight) ? minHeight : minHeight + 'px',
+								maxWidth : isPercentage(maxWidth) ? maxWidth : maxWidth + 'px',
+								maxHeight : isPercentage(maxHeight) ? maxHeight : maxHeight + 'px'
+							})
+							.append(content);
+
+						current.width = loadingBay.width();
+						current.height = loadingBay.height();
+
+						// Re-check to fix 1px bug in some browsers
+						loadingBay.width( F.current.width );
+
+						if (loadingBay.height() > current.height) {
+							loadingBay.width(current.width + 1);
+
+							current.width = loadingBay.width();
+							current.height = loadingBay.height();
+						}
+
+						content = loadingBay.contents().detach();
+
+						loadingBay.remove();
+					}
+
+					break;
+
+				case 'image':
+					content = current.tpl.image.replace('{href}', current.href);
+
+					current.aspectRatio = true;
+					break;
+
+				case 'swf':
+					content = current.tpl.swf.replace(/\{width\}/g, current.width).replace(/\{height\}/g, current.height).replace(/\{href\}/g, current.href);
+					break;
+
+				case 'iframe':
+					content = $(current.tpl.iframe.replace('{rnd}', new Date().getTime()) )
+						.attr('scrolling', current.scrolling)
+						.attr('src', current.href);
+
+					current.scrolling = isMobile ? 'scroll' : 'auto';
+
+					break;
+			}
+
+			if (type === 'image' || type === 'swf') {
+				current.autoSize = false;
+				current.scrolling = 'visible';
+			}
+
+			if (type == 'iframe' && current.autoSize) {
+				F.showLoading();
+
+				F.inner
+					.width(current.width)
+					.height(current.height)
+					.css('overflow', current.scrolling);
+
+				content.bind({
+					onCancel : function() {
+						$(this).unbind();
+
+						F._afterZoomOut();
+					},
+					load : function() {
+						F.hideLoading();
+
+						try {
+							if (this.contentWindow.document.location) {
+								F.current.height = $(this).contents().find('body').height() + 12;
+							}
+						} catch (e) {
+							F.current.autoSize = false;
+						}
+
+						if (F.isOpened) {
+							F.update();
+
+						} else {
+							F._beforeShow();
+						}
+					}
+				}).appendTo(F.inner);
+
+			} else {
+				F.inner.append(content);
+
+				F._beforeShow();
+			}
+		},
+
+		_beforeShow : function() {
+			F.coming = null;
+
+			//Give a chance for helpers or callbacks to update elements
+			F.trigger('beforeShow');
+
+			//Set initial dimensions and hide
+			F._setDimension();
+			F.wrap.hide().removeClass('fancybox-tmp');
+
+			F.bindEvents();
+
+			F._preloadImages();
+
+			F.transitions[ F.isOpened ? F.current.nextMethod : F.current.openMethod ]();
+		},
+
+		_setDimension: function () {
+			var wrap = F.wrap,
+				outer = F.outer,
+				inner = F.inner,
+				current = F.current,
+				viewport = F.getViewport(),
+				margin = current.margin,
+				padding2 = current.padding * 2,
+				width = current.width,
+				height = current.height,
+				maxWidth = current.maxWidth + padding2,
+				maxHeight = current.maxHeight + padding2,
+				minWidth = current.minWidth + padding2,
+				minHeight = current.minHeight + padding2,
+				ratio,
+				height_,
+				space;
+
+			viewport.w -= (margin[1] + margin[3]);
+			viewport.h -= (margin[0] + margin[2]);
+
+			if (isPercentage(width)) {
+				width = (((viewport.w - padding2) * parseFloat(width)) / 100);
+			}
+
+			if (isPercentage(height)) {
+				height = (((viewport.h - padding2) * parseFloat(height)) / 100);
+			}
+
+			ratio = width / height;
+			width += padding2;
+			height += padding2;
+
+			if (current.fitToView) {
+				maxWidth = Math.min(viewport.w, maxWidth);
+				maxHeight = Math.min(viewport.h, maxHeight);
+			}
+
+			if (current.aspectRatio) {
+				if (width > maxWidth) {
+					width = maxWidth;
+					height = ((width - padding2) / ratio) + padding2;
+				}
+
+				if (height > maxHeight) {
+					height = maxHeight;
+					width = ((height - padding2) * ratio) + padding2;
+				}
+
+				if (width < minWidth) {
+					width = minWidth;
+					height = ((width - padding2) / ratio) + padding2;
+				}
+
+				if (height < minHeight) {
+					height = minHeight;
+					width = ((height - padding2) * ratio) + padding2;
+				}
+
+			} else {
+				width = Math.max(minWidth, Math.min(width, maxWidth));
+				height = Math.max(minHeight, Math.min(height, maxHeight));
+			}
+
+			width = Math.round(width);
+			height = Math.round(height);
+
+			//Reset dimensions
+			$(wrap.add(outer).add(inner)).width('auto').height('auto');
+
+			inner.width(width - padding2).height(height - padding2);
+			wrap.width(width);
+
+			height_ = wrap.height(); // Real wrap height
+
+			//Fit wrapper inside
+			if (width > maxWidth || height_ > maxHeight) {
+				while ((width > maxWidth || height_ > maxHeight) && width > minWidth && height_ > minHeight) {
+					height = height - 10;
+
+					if (current.aspectRatio) {
+						width = Math.round(((height - padding2) * ratio) + padding2);
+
+						if (width < minWidth) {
+							width = minWidth;
+							height = ((width - padding2) / ratio) + padding2;
+						}
+
+					} else {
+						width = width - 10;
+					}
+
+					inner.width(width - padding2).height(height - padding2);
+					wrap.width(width);
+
+					height_ = wrap.height();
+				}
+			}
+
+			current.dim = {
+				width: width,
+				height: height_
+			};
+
+			current.canGrow = current.autoSize && height > minHeight && height < maxHeight;
+			current.canShrink = false;
+			current.canExpand = false;
+
+			if ((width - padding2) < current.width || (height - padding2) < current.height) {
+				current.canExpand = true;
+
+			} else if ((width > viewport.w || height_ > viewport.h) && width > minWidth && height > minHeight) {
+				current.canShrink = true;
+			}
+
+			space = height_ - padding2;
+
+			F.innerSpace = space - inner.height();
+			F.outerSpace = space - outer.height();
+		},
+
+		_getPosition: function (a) {
+			var current = F.current,
+				viewport = F.getViewport(),
+				margin = current.margin,
+				width = F.wrap.width() + margin[1] + margin[3],
+				height = F.wrap.height() + margin[0] + margin[2],
+				rez = {
+					position: 'absolute',
+					top: margin[0] + viewport.y,
+					left: margin[3] + viewport.x
+				};
+
+			if (current.autoCenter && current.fixed && (!a || a[0] === false) && height <= viewport.h && width <= viewport.w) {
+				rez = {
+					position: 'fixed',
+					top: margin[0],
+					left: margin[3]
+				};
+			}
+
+			rez.top = Math.ceil(Math.max(rez.top, rez.top + ((viewport.h - height) * current.topRatio))) + 'px';
+			rez.left = Math.ceil(Math.max(rez.left, rez.left + ((viewport.w - width) * 0.5))) + 'px';
+
+			return rez;
+		},
+
+		_afterZoomIn: function () {
+			var current = F.current, scrolling = current ? current.scrolling : 'no';
+
+			if (!current) {
+				return;
+			}
+
+			F.isOpen = F.isOpened = true;
+
+			F.wrap.addClass('fancybox-opened').css('overflow', 'visible');
+
+			F.inner.css('overflow', scrolling === 'yes' ? 'scroll' : (scrolling === 'no' ? 'hidden' : scrolling));
+
+			//Assign a click event
+			if (current.closeClick || current.nextClick) {
+				//This is not the perfect solution but arrows have to be next to content so their height will match
+				// and I do not want another wrapper around content
+				F.inner.css('cursor', 'pointer').bind('click.fb', function(e) {
+					if (!$(e.target).is('a') && !$(e.target).parent().is('a')) {
+						F[ current.closeClick ? 'close' : 'next' ]();
+					}
+				});
+			}
+
+			//Create a close button
+			if (current.closeBtn) {
+				$(current.tpl.closeBtn).appendTo(F.outer).bind('click.fb', F.close);
+			}
+
+			//Create navigation arrows
+			if (current.arrows && F.group.length > 1) {
+				if (current.loop || current.index > 0) {
+					$(current.tpl.prev).appendTo(F.outer).bind('click.fb', F.prev);
+				}
+
+				if (current.loop || current.index < F.group.length - 1) {
+					$(current.tpl.next).appendTo(F.outer).bind('click.fb', F.next);
+				}
+			}
+
+			F.trigger('afterShow');
+
+			F.update();
+
+			if (F.opts.autoPlay && !F.player.isActive) {
+				F.opts.autoPlay = false;
+
+				F.play();
+			}
+		},
+
+		_afterZoomOut: function () {
+			F.trigger('afterClose');
+
+			F.wrap.trigger('onReset').remove();
+
+			$.extend(F, {
+				group: {},
+				opts: {},
+				current: null,
+				isActive: false,
+				isOpened: false,
+				isOpen: false,
+				wrap: null,
+				outer: null,
+				inner: null
+			});
+		}
+	});
+
+	/*
+	 *	Default transitions
+	 */
+
+	F.transitions = {
+		getOrigPosition: function () {
+			var current = F.current,
+				element = current.element,
+				padding = current.padding,
+				orig = $(current.orig),
+				pos = {},
+				width = 50,
+				height = 50,
+				viewport;
+
+			if (!orig.length && current.isDom && $(element).is(':visible')) {
+				orig = $(element).find('img:first');
+
+				if (!orig.length) {
+					orig = $(element);
+				}
+			}
+
+			if (orig.length) {
+				pos = orig.offset();
+
+				if (orig.is('img')) {
+					width = orig.outerWidth();
+					height = orig.outerHeight();
+				}
+
+			} else {
+				viewport = F.getViewport();
+
+				pos.top = viewport.y + (viewport.h - height) * 0.5;
+				pos.left = viewport.x + (viewport.w - width) * 0.5;
+			}
+
+			pos = {
+				top: Math.ceil(pos.top - padding) + 'px',
+				left: Math.ceil(pos.left - padding) + 'px',
+				width: Math.ceil(width + padding * 2) + 'px',
+				height: Math.ceil(height + padding * 2) + 'px'
+			};
+
+			return pos;
+		},
+
+		step: function (now, fx) {
+			var ratio, innerValue, outerValue;
+
+			if (fx.prop === 'width' || fx.prop === 'height') {
+				innerValue = outerValue = Math.ceil(now - (F.current.padding * 2));
+
+				if (fx.prop === 'height') {
+					ratio = (now - fx.start) / (fx.end - fx.start);
+
+					if (fx.start > fx.end) {
+						ratio = 1 - ratio;
+					}
+
+					innerValue -= F.innerSpace * ratio;
+					outerValue -= F.outerSpace * ratio;
+				}
+
+				F.inner[fx.prop](innerValue);
+				F.outer[fx.prop](outerValue);
+			}
+		},
+
+		zoomIn: function () {
+			var wrap = F.wrap,
+				current = F.current,
+				effect = current.openEffect,
+				elastic = effect === 'elastic',
+				dim = current.dim,
+				startPos = $.extend({}, dim, F._getPosition( elastic )),
+				endPos = $.extend({opacity : 1}, startPos);
+
+			if (elastic) {
+				//Remove "position" property
+				delete endPos.position;
+
+				startPos = this.getOrigPosition();
+
+				if (current.openOpacity) {
+					startPos.opacity = 0;
+				}
+
+				F.outer.add(F.inner).width('auto').height('auto');
+			} else if (effect === 'fade') {
+				startPos.opacity = 0;
+			}
+
+			wrap.css(startPos)
+				.show()
+				.animate(endPos, {
+					duration : effect === 'none' ? 0 : current.openSpeed,
+					easing : current.openEasing,
+					step: elastic ? this.step : null,
+					complete: F._afterZoomIn
+				});
+		},
+
+		zoomOut: function () {
+			var wrap = F.wrap,
+				current = F.current,
+				effect = current.openEffect,
+				elastic = effect === 'elastic',
+				endPos = {opacity : 0};
+
+			if (elastic) {
+				if (wrap.css('position') === 'fixed') {
+					wrap.css(F._getPosition(true));
+				}
+
+				endPos = this.getOrigPosition();
+
+				if (current.closeOpacity) {
+					endPos.opacity = 0;
+				}
+			}
+
+			wrap.animate(endPos, {
+				duration: effect === 'none' ? 0 : current.closeSpeed,
+				easing: current.closeEasing,
+				step: elastic ? this.step : null,
+				complete: F._afterZoomOut
+			});
+		},
+
+		changeIn: function () {
+			var wrap = F.wrap,
+				current = F.current,
+				effect = current.nextEffect,
+				startPos = F._getPosition( effect === 'elastic' ),
+				endPos = { opacity : 1 };
+
+			if (effect === 'elastic') {
+				startPos.top = (parseInt(startPos.top, 10) - 200) + 'px';
+				endPos.top = '+=200px';
+				startPos.opacity = 0;
+			}
+
+			wrap.css(startPos)
+				.show()
+				.animate(endPos, {
+					duration : effect === 'none' ? 0 : current.nextSpeed,
+					easing : current.nextEasing,
+					complete: function() {
+						//Somehow this helps to restore overflow
+						setTimeout( F._afterZoomIn, 1);
+					}
+				});
+		},
+
+		changeOut: function () {
+			var wrap = F.wrap,
+				current = F.current,
+				effect = current.nextEffect,
+				endPos = { opacity : 0 },
+				cleanUp = function () {
+					$(this).trigger('onReset').remove();
+				};
+
+			wrap.removeClass('fancybox-opened');
+
+			if (effect === 'elastic') {
+				endPos.top = '+=200px';
+			}
+
+			wrap.animate(endPos, {
+				duration: effect === 'none' ? 0 : current.prevSpeed,
+				easing: current.prevEasing,
+				complete: cleanUp
+			});
+		}
+	};
+
+	/*
+	 *	Overlay helper
+	 */
+
+	F.helpers.overlay = {
+		overlay: null,
+
+		update: function () {
+			var width, scrollWidth, offsetWidth;
+
+			if (!isMobile) {
+				//Reset width/height so it will not mess
+				this.overlay.width(0).height(0);
+			}
+
+			if ($.browser.msie) {
+				scrollWidth = Math.max(document.documentElement.scrollWidth, document.body.scrollWidth);
+				offsetWidth = Math.max(document.documentElement.offsetWidth, document.body.offsetWidth);
+
+				width = scrollWidth < offsetWidth ? W.width() : scrollWidth;
+
+			} else {
+				width = D.width();
+			}
+
+			this.overlay.width(width).height(D.height());
+		},
+
+		beforeShow: function (opts) {
+			if (this.overlay) {
+				return;
+			}
+
+			opts = $.extend(true, {
+				speedIn : 'fast',
+				closeClick : true,
+				opacity : 1,
+				css : {
+					background: 'black'
+				}
+			}, opts);
+
+			this.overlay = $('<div id="fancybox-overlay"></div>').css(opts.css).appendTo('body');
+
+			this.update();
+
+			if (opts.closeClick) {
+				this.overlay.bind('click.fb', F.close);
+			}
+
+			W.bind("resize.fb", $.proxy(this.update, this));
+
+			this.overlay.fadeTo(opts.speedIn, opts.opacity);
+		},
+
+		onUpdate: function () {
+			//Update as content may change document dimensions
+			this.update();
+		},
+
+		afterClose: function (opts) {
+			if (this.overlay) {
+				this.overlay.fadeOut(opts.speedOut || 0, function () {
+					$(this).remove();
+				});
+			}
+
+			this.overlay = null;
+		}
+	};
+
+	/*
+	 *	Title helper
+	 */
+
+	F.helpers.title = {
+		beforeShow: function (opts) {
+			var title, text = F.current.title;
+
+			if (text) {
+				title = $('<div class="fancybox-title fancybox-title-' + opts.type + '-wrap">' + text + '</div>').appendTo('body');
+
+				if (opts.type === 'float') {
+					//This helps for some browsers
+					title.width(title.width());
+
+					title.wrapInner('<span class="child"></span>');
+
+					//Increase bottom margin so this title will also fit into viewport
+					F.current.margin[2] += Math.abs(parseInt(title.css('margin-bottom'), 10));
+				}
+
+				title.appendTo(opts.type === 'over' ? F.inner : (opts.type === 'outside' ? F.wrap : F.outer));
+			}
+		}
+	};
+
+	// jQuery plugin initialization
+	$.fn.fancybox = function (options) {
+		var that = $(this),
+			selector = this.selector || '',
+			index,
+			run = function(e) {
+				var what = this, idx = index, relType, relVal;
+
+				if (!(e.ctrlKey || e.altKey || e.shiftKey || e.metaKey)) {
+					e.preventDefault();
+
+					relType = options.groupAttr || 'data-fancybox-group';
+					relVal = $(what).attr(relType);
+
+					if (!relVal) {
+						relType = 'rel';
+						relVal = what[ relType ];
+					}
+
+					if (relVal && relVal !== '' && relVal !== 'nofollow') {
+						what = selector.length ? $(selector) : that;
+						what = what.filter('[' + relType + '="' + relVal + '"]');
+						idx = what.index(this);
+					}
+
+					options.index = idx;
+
+					F.open(what, options);
+				}
+			};
+
+		options = options || {};
+		index = options.index || 0;
+
+		if (selector) {
+			D.undelegate(selector, 'click.fb-start').delegate(selector, 'click.fb-start', run);
+
+		} else {
+			that.unbind('click.fb-start').bind('click.fb-start', run);
+		}
+
+		return this;
+	};
+
+}(window, document));;
+// handlebars template: see jquery.audioplayer-template.handlebars
+(function () {
+  var a = Handlebars.template,
+    b = Handlebars.templates = Handlebars.templates || {};
+  b["jquery.audioplayer"] = a(function (a, b, c, d, e) {
+    c = c || a.helpers;
+    var f = "",
+      g, h, i = "function",
+      j = this.escapeExpression;
+    return f += '<div class="jp-audio">\r\n  <div id="', h = c.player_id, h ? g = h.call(b, {
+      hash: {}
+    }) : (g = b.player_id, g = typeof g === i ? g() : g), f += j(g) + '" class="jp-jplayer"></div>\r\n  <div id="', h = c.player_id, h ? g = h.call(b, {
+      hash: {}
+    }) : (g = b.player_id, g = typeof g === i ? g() : g), f += j(g) + '_interface" class="jp-interface">\r\n    <ul class="jp-controls">\r\n      <li><a href="#" class="jp-play" tabindex="1" title="play">play</a></li>\r\n      <li><a href="#" class="jp-pause" tabindex="1" title="pause">pause</a></li>\r\n      <li><a href="#" class="jp-stop" tabindex="1" title="stop">stop</a></li>\r\n    </ul>\r\n    <div class="jp-progress">\r\n      <div class="jp-seek-bar">\r\n        <div class="jp-play-bar"></div>\r\n      </div>\r\n    </div>\r\n    <p class="jp-status">\r\n      <span class="jp-current-time"></span> / <span class="jp-duration"></span>\r\n    </p>\r\n  </div>\r\n</div>\r\n', f
+  })
+})();
+
+// jquery plugin
+jQuery(function ($) {
+  $.fn.audioplayer = function () {
+    return this.each(function (i) {
+      var ele = $(this);
+      var settings = {
+        "player_id": 'audioplayer_' + i,
+        "mp3": ele.data('mp3')
+      };
+      var markup = Handlebars.templates['jquery.audioplayer'](settings);
+      ele.html(markup);
+      var player = $('#' + settings.player_id);
+
+      player.jPlayer({
+        ready: function () {
+          $(this).jPlayer("setMedia", {
+            "mp3": settings.mp3
+          });
+          player.bind($.jPlayer.event.play, function () {
+            $(this).jPlayer("pauseOthers");
+          });
+        },
+        swfPath: "/sites/all/libraries/jplayer",
+        cssSelectorAncestor: '#' + settings.player_id + '_interface',
+        solution: "html, flash",
+        supplied: "mp3",
+        preload: "auto",
+        autoplay: false,
+        repeat: "none",
+        continuous: 0,
+        muted: false,
+        volume: 0.8
+      });
+    });
+  };
+});;
+// http://api.jquery.com/map/
+jQuery.fn.equalizeHeights = function () {
+  return this.height(Math.max.apply(this, jQuery(this).map(function (i, e) {
+    return jQuery(e).height()
+  }).get()));
+};
+/* dropdowns ------------------------------------------
+ * fade in/out dropdown menus with hover-intent
+ * @requires jquery-dotimeout
+ * ---------------------------------------------------- */
+(function ($) {
+
+  $.dropdowns = function (el, options) {
+
+    var base = this;
+    base.$el = $(el);
+
+    base.init = function () {
+      base.options = $.extend({}, $.dropdowns.defaultOptions, options);
+      base.$triggers = base.$el.find(base.options.triggers);
+      base.$menus = base.$el.find("ul");
+
+      base.$el.delegate('.menu-block-wrapper > ul > li > a', 'mouseover', function (e) {
+        // when mousing over the trigger, treat as "hoverintent": pause before showing
+        $.doTimeout("dropdown", base.options.timeout, base.over, e.target);
+      }).delegate(base.options.triggers, 'mouseout', function (e) {
+        // when leaving the trigger, wait before hiding the menu to allow the cursor to slide into the menu
+        $.doTimeout("dropdown", base.options.timeout, base.out);
+      });
+      base.$el.delegate('ul', 'mouseover', function (e) {
+        // when arriving in the menu, cancel the hide timer
+        $.doTimeout("dropdown");
+      }).delegate('ul', 'mouseout', function (e) {
+        // when mousing out of the menu, wait before hiding it
+        $.doTimeout("dropdown", base.options.timeout, base.out);
+      });
+    };
+
+    // when a top-nav item is moused into, cleanup and show the menu
+    base.over = function (elem) {
+
+      elem = ($(elem).is('li')) ? elem : $(elem).parents('li');
+
+      base.$el.find("ul:visible").hide();
+      base.$el.find('>li').removeClass(base.options.stick);
+
+      $(elem).addClass(base.options.stick);
+      $(elem).find("ul:hidden").fadeIn(base.options.show);
+
+    };
+
+    // when the mouse leaves a nav item OR a dropdown, fade out the menu and cleanup
+    base.out = function () {
+      base.$el.find("ul:visible").fadeOut(base.options.hide);
+      base.$el.find('>li').removeClass(base.options.stick);
+    };
+
+    base.init();
+  };
+
+  $.dropdowns.defaultOptions = {
+    stick: 'stick',
+    triggers: 'nav > .menu > li > a',
+    timeout: 250,
+    show: 0,
+    hide: 0
+  };
+
+  $.fn.dropdowns = function (options) {
+    return this.each(function () {
+      (new $.dropdowns(this, options));
+    });
+  };
+
+})(jQuery);;
+/* 
+ * The MIT License
+ *
+ * Copyright (c) 2012 James Allardice
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), 
+ * to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ * and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *
+ * -----------------------------------------------------------------------------------------------------------------------------------------------------
+ *
+ * Placeholders is a simple polyfill for the HTML5 "placeholder" attribute. The placeholder attribute can be used on input elements of certain types
+ * and provides a short hint (such as a sample value or a brief description) intended to aid the user with data entry. This polyfill has been tested
+ * and functions correctly in Internet Explorer 6 and above, Firefox 3.6 and above, Safari 3.2 and above, Opera 9 and above and Chrome 16 and above.
+ * The script will be tested in further browsers in due course and the above list edited accordingly.
+ *
+ * User agents should display the value of the placeholder attribute when the element's value is the empty string and the element does not
+ * have focus. The user agents that have implemented support for this attribute all display the placeholder inside the element, as if it were
+ * the element's value, in a light grey colour to differentiate between placeholder text and value text.
+ *
+ * The Placeholders polyfill attempts to replicate the functionality of compliant user agents so that non-compliant user agents will still function
+ * as expected when faced with a "placeholder" attribute.
+ * 
+ * The script is unobtrusive and will only apply if the placeholder attribute is not supported by the user agent in which it is running. To use a placeholder
+ * simply add the "placeholder" attribute to a supporting input element:
+ *
+ * <input type="text" placeholder="Placeholder text">
+ *
+ * To get this placeholder to function in non-supporting user agents simply call the init method when appropriate (the DOM must be ready for manipulation,
+ * unless the "live" argument is true):
+ *
+ * Placeholders.init();
+ *
+ * The init method accepts one argument, "live". If live is truthy, the polyfill will apply to all supported input elements now and in the future, and dynamic
+ * changes to the placeholder attribute value will be reflected. If live is falsy, the polyfill will only apply to those elements with a placeholder attribute
+ * value in the DOM at the time the method is executed. 
+ *
+ * If the live option is not used, the placeholders can be refreshed manually by calling Placeholders.refresh() */
+
+/*jslint browser: true */
+
+var Placeholders = (function () {
+
+	"use strict";
+
+	/* List of input types that do not support the placeholder attribute. We don't want to modify any input elements with one of these types.
+	 * WARNING: If an input type is not supported by a browser, the browser will choose the default type (text) and the placeholder shim will 
+	 * apply */
+	var invalidTypes = [
+		"hidden",
+		"datetime",
+		"date",
+		"month",
+		"week",
+		"time",
+		"datetime-local",
+		"range",
+		"color",
+		"checkbox",
+		"radio",
+		"file",
+		"submit",
+		"image",
+		"reset",
+		"button"
+	],
+
+	//"interval" will be used if "live" is true
+		interval;
+
+	/* The focusHandler function is executed when input elements with placeholder attributes receive a focus event. If necessary, the placeholder
+	 * and its associated styles are removed from the element. */
+	function focusHandler(elem) {
+
+		//If the placeholder is currently visible, remove it and its associated styles
+		if (elem.value === elem.getAttribute("placeholder")) {
+
+			/* Remove the placeholder class name. Use a regular expression to ensure the string being searched for is a complete word, and not part of a longer
+			 * string, on the off-chance a class name including that string also exists on the element */
+			elem.className = elem.className.replace(/\bplaceholderspolyfill\b/, "");
+			elem.value = "";
+		}
+	}
+
+	/* The blurHandler function is executed when input elements with placeholder attributes receive a blur event. If necessary, the placeholder
+	 * and its associated styles are applied to the element. */
+	function blurHandler(elem) {
+
+		//If the input value is the empty string, apply the placeholder and its associated styles
+		if (elem.value === "") {
+			elem.className = elem.className + " placeholderspolyfill";
+			elem.value = elem.getAttribute("placeholder");
+		}
+	}
+
+	/* The submitHandler function is executed when the containing form, if any, of a given input element is submitted. If necessary, placeholders on any
+	 * input element descendants of the form are removed so that the placeholder value is not submitted as the element value. */
+	function submitHandler(elem) {
+		var inputs = elem.getElementsByTagName("input"),
+			textareas = elem.getElementsByTagName("textarea"),
+			numInputs = inputs.length,
+			num = numInputs + textareas.length,
+			element,
+			placeholder,
+			i;
+		//Iterate over all descendant input elements and remove placeholder if necessary
+		for (i = 0; i < num; i += 1) {
+			element = (i < numInputs) ? inputs[i] : textareas[i - numInputs];
+			placeholder = element.getAttribute("placeholder");
+
+			//If the value of the input is equal to the value of the placeholder attribute we need to clear the value
+			if (element.value === placeholder) {
+				element.value = "";
+			}
+		}
+	}
+
+	//The addEventListeners function binds focus and blur event listeners to the specified input or textarea element.
+	function addEventListeners(element) {
+		if (element.addEventListener) {
+			/* Attach event listeners (W3C style. Anonymous event handler used to be consistent with Microsoft style and make it easier to refer
+			 * to element in actual handler function */
+			element.addEventListener("focus", function () {
+				focusHandler(element);
+			}, false);
+			element.addEventListener("blur", function () {
+				blurHandler(element);
+			}, false);
+		} else if (element.attachEvent) {
+			/* Attach event listeners (Microsoft style - since IE < 9 does not bind the value of "this" to the element that triggered the event,
+			 * we need to call the real event handler from an anonymous event handler function and pass in the element) */
+			element.attachEvent("onfocus", function () {
+				focusHandler(element);
+			});
+			element.attachEvent("onblur", function () {
+				blurHandler(element);
+			});
+		}
+	}
+
+	/* The updatePlaceholders function checks all input and textarea elements and updates the placeholder if necessary. Elements that have been
+	 * added to the DOM since the call to createPlaceholders will not function correctly until this function is executed. The same goes for
+	 * any existing elements whose placeholder property has been changed (via element.setAttribute("placeholder", "new") for example) */
+	function updatePlaceholders() {
+
+		//Declare variables, get references to all input and textarea elements
+		var inputs = document.getElementsByTagName("input"),
+			textareas = document.getElementsByTagName("textarea"),
+			numInputs = inputs.length,
+			num = numInputs + textareas.length,
+			i,
+			element,
+			oldPlaceholder,
+			newPlaceholder;
+
+		//Iterate over all input and textarea elements and apply/update the placeholder polyfill if necessary
+		for (i = 0; i < num; i += 1) {
+
+			//Get the next element from either the input NodeList or the textarea NodeList, depending on how many elements we've already looped through
+			element = (i < numInputs) ? inputs[i] : textareas[i - numInputs];
+
+			//Get the value of the placeholder attribute
+			newPlaceholder = element.getAttribute("placeholder");
+
+			//Check whether the current input element is of a type that supports the placeholder attribute
+			if (invalidTypes.indexOf(element.type) === -1) {
+
+				//The input type does support the placeholder attribute. Check whether the placeholder attribute has a value
+				if (newPlaceholder) {
+
+					//The placeholder attribute has a value. Get the value of the current placeholder data-* attribute
+					oldPlaceholder = element.getAttribute("data-currentplaceholder");
+
+					//Check whether the placeholder attribute value has changed
+					if (newPlaceholder !== oldPlaceholder) {
+
+						//The placeholder attribute value has changed so we need to update. Check whether the placeholder should currently be visible.
+						if (element.value === oldPlaceholder || element.value === newPlaceholder || !element.value) {
+
+							//The placeholder should be visible so change the element value to that of the placeholder attribute and set placeholder styles
+							element.value = newPlaceholder;
+							element.className = element.className + " placeholderspolyfill";
+						}
+
+						//If the current placeholder data-* attribute has no value the element wasn't present in the DOM when event handlers were bound, so bind them now
+						if (!oldPlaceholder) {
+							addEventListeners(element);
+						}
+
+						//Update the value of the current placeholder data-* attribute to reflect the new placeholder value
+						element.setAttribute("data-currentplaceholder", newPlaceholder);
+					}
+				}
+			}
+		}
+	}
+
+	/* Make form submit event handler (using factory function to avoid JSLint error) */
+	function makeSubmitHandler(form) {
+		return function () {
+			submitHandler(form);
+		};
+	}
+
+	/* The createPlaceholders function checks all input and textarea elements currently in the DOM for the placeholder attribute. If the attribute
+	 * is present, and the element is of a type (e.g. text) that allows the placeholder attribute, it attaches the appropriate event listeners
+	 * to the element and if necessary sets its value to that of the placeholder attribute */
+	function createPlaceholders() {
+
+		//Declare variables and get references to all input and textarea elements
+		var inputs = document.getElementsByTagName("input"),
+			textareas = document.getElementsByTagName("textarea"),
+			numInputs = inputs.length,
+			num = numInputs + textareas.length,
+			i,
+			element,
+			form,
+			placeholder;
+
+		//Iterate over all input elements and apply placeholder polyfill if necessary
+		for (i = 0; i < num; i += 1) {
+
+			//Get the next element from either the input NodeList or the textarea NodeList, depending on how many elements we've already looped through
+			element = (i < numInputs) ? inputs[i] : textareas[i - numInputs];
+
+			//Get the value of the placeholder attribute
+			placeholder = element.getAttribute("placeholder");
+
+			//Check whether or not the current element is of a type that allows the placeholder attribute
+			if (invalidTypes.indexOf(element.type) === -1) {
+
+				//The input type does support placeholders. Check that the placeholder attribute has been given a value
+				if (placeholder) {
+
+					//The placeholder attribute has a value. Keep track of the current placeholder value in an HTML5 data-* attribute
+					element.setAttribute("data-currentplaceholder", placeholder);
+
+					//If the value of the element is the empty string set the value to that of the placeholder attribute and apply the placeholder styles
+					if (element.value === "" || element.value === placeholder) {
+						element.className = element.className + " placeholderspolyfill";
+						element.value = placeholder;
+					}
+
+					//If the element has a containing form bind to the submit event so we can prevent placeholder values being submitted as actual values
+					if (element.form) {
+
+						//Get a reference to the containing form element (if present)
+						form = element.form;
+
+						//The placeholdersubmit data-* attribute is set if this form has already been dealt with
+						if (!form.getAttribute("data-placeholdersubmit")) {
+							if (form.addEventListener) {
+								//The placeholdersubmit attribute wasn't set, so attach a submit event handler (W3C standard style)
+								form.addEventListener("submit", makeSubmitHandler(form), false);
+							} else if (form.attachEvent) {
+								//The placeholdersubmit attribute wasn't set, so attach a submit event handler (Microsoft IE < 9 style)
+								form.attachEvent("onsubmit", makeSubmitHandler(form));
+							}
+
+							//Set the placeholdersubmit attribute so we don't repeatedly bind event handlers to this form element
+							form.setAttribute("data-placeholdersubmit", "true");
+						}
+					}
+
+					/* Attach event listeners to this element. If the event handlers were bound here, and not in a separate function,
+					 * we would need to wrap the loop body in a closure to preserve the value of element for each iteration. */
+					addEventListeners(element);
+				}
+			}
+		}
+	}
+
+	/* The init function checks whether or not we need to polyfill the placeholder functionality. If we do, it sets up various things
+	 * needed throughout the script and then calls createPlaceholders to setup initial placeholders */
+	function init(live) {
+
+		//Create an input element to test for the presence of the placeholder property. If the placeholder property exists, stop.
+		var test = document.createElement("input"),
+			styleElem,
+			styleRules,
+			i,
+			j;
+
+		//Test input element for presence of placeholder property. If it doesn't exist, the browser does not support HTML5 placeholders
+		if (typeof test.placeholder === "undefined") {
+			//HTML5 placeholder attribute not supported.
+
+			//Create style element for placeholder styles
+			styleElem = document.createElement("style");
+			styleElem.type = "text/css";
+
+			//Create style rules as text node
+			styleRules = document.createTextNode(".placeholderspolyfill { color:#999 !important; }");
+
+			//Append style rules to newly created stylesheet
+			if (styleElem.styleSheet) {
+				styleElem.styleSheet.cssText = styleRules.nodeValue;
+			} else {
+				styleElem.appendChild(styleRules);
+			}
+
+			//Append new style element to the head
+			document.getElementsByTagName("head")[0].appendChild(styleElem);
+
+			//We use Array.prototype.indexOf later, so make sure it exists
+			if (!Array.prototype.indexOf) {
+				Array.prototype.indexOf = function (obj, start) {
+					for (i = (start || 0), j = this.length; i < j; i += 1) {
+						if (this[i] === obj) { return i; }
+					}
+					return -1;
+				};
+			}
+
+			//Create placeholders for input elements currently part of the DOM
+			createPlaceholders();
+
+			/* If the live argument is truthy, call updatePlaceholders repeatedly to keep up to date with any DOM changes.
+			 * We use an interval over events such as DOMAttrModified (which are used in some other implementations of the placeholder attribute)
+			 * since the DOM level 2 mutation events are deprecated in the level 3 spec. */
+			if (live) {
+				interval = setInterval(updatePlaceholders, 100);
+			}
+		}
+
+		//Placeholder attribute already supported by browser :)
+		return false;
+	}
+
+	//Expose public methods
+	return {
+		init: init,
+		refresh: updatePlaceholders
+	};
+}());;
+// make it safe to use console.log always
+(function (a) {
+  function b() {}
+  for(var c = "assert,count,debug,dir,dirxml,error,exception,group,groupCollapsed,groupEnd,info,log,markTimeline,profile,profileEnd,time,timeEnd,trace,warn".split(","), d; !! (d = c.pop());) {
+    a[d] = a[d] || b;
+  }
+})
+(function () {
+  try {
+    console.log();
+    return window.console;
+  } catch(a) {
+    return(window.console = {});
+  }
+}());
+/*
+Array.prototype.sum = function(){
+  for(var i=0,sum=0;i<this.length;sum+=this[i++]);
+  return sum;
+};
+*/
+
+function sum(arr) {
+  var result = 0, n = arr.length || 0; //may use >>> 0 to ensure length is Uint32
+  while(n--) {
+    result += +arr[n]; // unary operator to ensure ToNumber conversion
+  }
+  return result;
+}
+
+// FACEBOOK EMBED
+(function (d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s);
+  js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+
+// DISQUS
+/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+// var disqus_shortname = 'losangelespubliclibrary'; // required: replace example with your forum shortname
+
+/* * * DON'T EDIT BELOW THIS LINE * * */
+// (function () {
+//    var s = document.createElement('script'); s.async = true;
+//    s.type = 'text/javascript';
+//    s.src = 'https://' + disqus_shortname + '.disqus.com/count.js';
+//    (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+// }());
+
+
+jQuery(function ($) {
+$('body').once(function() {
+
+  // MAIN NAVIGATION
+  var dropdowns = {};
+  dropdowns.menu = $('#main-menu');
+  dropdowns.sections = dropdowns.menu.children().addClass('section');
+  dropdowns.menu.mouseover(function (e) {
+    dropdowns.menu.doTimeout('main-nav', 250,  dropdowns.show, e.target, 250);
+  }).mouseout(function () {
+    dropdowns.menu.doTimeout('main-nav', 250, dropdowns.hide, null, 200);
+  });
+
+  dropdowns.show = function(elem, speed) {
+    var parent = $(elem).closest('.section');
+    dropdowns.menu.addClass('muted');
+    parent.addClass('stick');
+    if(dropdowns.menu.find('div:visible').length && parent.children('div:hidden').length) {
+      speed = 0;
+    }
+    dropdowns.hide(parent, speed / 2);
+    parent.children('div:hidden').fadeIn(speed);
+  }
+
+  dropdowns.hide = function(elem, speed) {
+    var parents = elem ? $(elem).closest('.section').siblings() : dropdowns.menu.children();
+    parents.removeClass('stick');
+    parents.children('div:visible').fadeOut(speed);
+    if(!elem) {
+      dropdowns.menu.removeClass('muted');
+    }
+  }
+
+
+
+  // AUDIENCE NAVIGATION
+  /* the "bar" is initially a UL set to table-cell, and the dropdowns are hidden
+   * "display:table-*" completely negates any use of postition:absolute, so we
+   * need to convert back to "display:block" for the LI elements. But we want to
+   * keep the top-level links as table-cell so we can take advantage of the
+   * vertical centering. We end up calculating the heights for everything
+   * and applying CSS as we go to fix the layout styles before init'ing the
+   * dropdowns plugin
+   */
+  var audience = {};
+  audience.speed = 200;
+  audience.timeout = 200;
+  audience.menu = $('#block-menu_block-5 .menu-block-wrapper > .audience-menu');
+  audience.top = audience.menu.children('li');
+
+  audience.max = 0;
+  audience.top.each(function() {
+    audience.max = Math.max(audience.max, $(this).height()+7);
+  }).height(audience.max);
+
+  audience.width = audience.top.eq(0).outerWidth();
+
+  audience.top.addClass('top').css({
+    'height': audience.max
+  }).children('a').addClass('table-cell').css({
+    'height': audience.max,
+    'width': audience.width - 10
+  }).next('ul').css({
+    'top': audience.max,
+    'width': audience.width
+  });
+
+  audience.menu.dropdowns();
+
+
+/* Money Matters Menu -- Start */
+
+  // AUDIENCE NAVIGATION WITH SUB-TEXT
+  /* the "bar" is initially a UL set to table-cell, and the dropdowns are hidden
+   * "display:table-*" completely negates any use of postition:absolute, so we
+   * need to convert back to "display:block" for the LI elements. But we want to
+   * keep the top-level links as table-cell so we can take advantage of the
+   * vertical centering. We end up calculating the heights for everything
+   * and applying CSS as we go to fix the layout styles before init'ing the
+   * dropdowns plugin
+   */
+  var audienceWithSubtext = {};
+  audienceWithSubtext.speed = 200;
+  audienceWithSubtext.timeout = 200;
+  audienceWithSubtext.menu = $('#block-views-moneymatters_menu-navigation .audience-menu');
+  audienceWithSubtext.top = audienceWithSubtext.menu.children('li');
+
+  audienceWithSubtext.max = 0;
+  audienceWithSubtext.top.each(function() {
+    audienceWithSubtext.max = Math.max(audienceWithSubtext.max, $(this).height()+7);
+  }).height(audienceWithSubtext.max);
+
+  audienceWithSubtext.width = audienceWithSubtext.top.eq(0).outerWidth();
+
+  audienceWithSubtext.top.addClass('top').css({
+    'height': audienceWithSubtext.max
+  }).children('a').addClass('table-cell').css({
+    'height': audienceWithSubtext.max,
+    'width': audienceWithSubtext.width - 10
+  }).next('ul').css({
+    'top': audienceWithSubtext.max,
+    'width': audienceWithSubtext.width
+  });
+
+  audienceWithSubtext.menu.dropdowns();
+
+/* Money Matters Menu -- End */
+
+
+  // SIDEBAR MENU
+  var menublock = $('#block-menu_block-1 .menu-block-wrapper');
+  menublock.children('.menu').children('.expanded').append('<span class="toggler expandable" />');
+  menublock.delegate('.toggler', 'click', function () {
+    $(this).siblings('.menu').toggle();
+    var classname = $(this).siblings('.menu').is(':visible') ? 'collabsible' : 'expandable';
+    $(this).attr('class', classname).addClass('toggler');
+    return false;
+  });
+  // open the .active-trail by default
+  menublock.children('.menu').children('.active-trail').children('span').trigger('click');
+
+
+  // var collections = $('#block-menu_block-1 .menu .expanded .menu .expanded .menu').children();
+  // $.each(collections, function () {
+  //   if(this.innerHTML.match("collection") && !this.innerHTML.match("active")) {
+  //     $(this).hide();
+  //   }
+  //   if(this.innerHTML.match("staff-recommendations") && !this.innerHTML.match("active")) {
+  //     $(this).hide();
+  //   }
+  //   if(this.innerHTML.match("book-list") && !this.innerHTML.match("active")) {
+  //     $(this).hide();
+  //   }
+  //   if (this.innerHTML.match("blog-tags") && !this.innerHTML.match("active")) {
+  //     $(this).hide();
+  //   }
+  //   if (this.innerHTML.match("blog-archive") && !this.innerHTML.match("active-trail")) {
+  //     $(this).hide();
+  //   }
+  //   if (this.innerHTML.match("blogs") && !this.innerHTML.match("active-trail")) {
+  //     $(this).hide();
+  //   }
+  //   if (this.innerHTML.match("blog-entry") && !this.innerHTML.match("active-trail")) {
+  //     $(this).hide();
+  //   }
+  // });
+
+
+
+  // SIDEBAR CHASER
+  // add pointer to the sidebar that follows the mouse. returns to the "active" position when mouse leaves the sidebar
+  var active = $('.region-sidebar-first').find('a.active-trail.active').offset(),
+    sidebar = $('.region-sidebar-first').offset(),
+    revert = (active) ? active.top - sidebar.top : -24,
+    pointer = $('<span class="pointer" />').appendTo('.region-sidebar-first').css({
+      top: revert
+    }),
+    chaser = {
+      follow: function (e) {
+        pointer.stop().css({
+          top: e.pageY - sidebar.top
+        });
+      },
+      restore: function () {
+        pointer.stop().animate({
+          top: revert
+        }, 500, 'easeOutBack');
+      }
+    };
+  $('.region-sidebar-first').bind('mousemove.chaser', chaser.follow).bind('mouseleave.chaser', chaser.restore);
+
+  // HEADER LOGIN POPUP
+  $('#block-lapl-login_popup').children('.block-title').append('<a class="close" title="click to close or press ESC">&times;</a>');
+  $('#header').on('click', 'a.login', function () {
+    $('#block-lapl-login_popup').fadeIn('normal');
+    return false;
+  });
+  $('#header').on('click', 'a.close', function () {
+    $('#block-lapl-login_popup').fadeOut('fast');
+    return false;
+  });
+  $(document.documentElement).keyup(function (event) {
+    if(event.keyCode === 27) {
+      $('#block-lapl-login_popup:visible').find('a.close').trigger('click');
+    }
+  });
+
+  // CARL login errors trigger the popup w/ a message
+  //   var $carl_login_form = $('#carl-login-form');
+   //  if( $carl_login_form.hasClass('carl-login-error') ) {
+  //     var error_message;
+  //     if ($carl_login_form.hasClass('carl-login-error-user-invalid')) {
+  //       error_message = "Invalid patron ID or PIN. Please try again, or contact the Library.";
+   //    } else if ($carl_login_form.hasClass('carl-login-error-auth-error')) {
+  //       error_message = "Invalid patron ID or PIN. Please try again, or contact the Library.";
+   //    } else if ($carl_login_form.hasClass('carl-login-error-relogin-required')) {
+   //      error_message = "Your session has expired, please log in again.";
+   //    }
+   //    var $error = $("<p/>", {
+  //       "class" : "carl-login-error-message"
+  //     }).text(error_message);
+  //     $carl_login_form.prepend($error);
+    //   $('#block-lapl-login_popup').show();
+  //   }
+
+  // overwrite fancybox defaults
+  $.fancybox.defaults.openEffect = 'none';
+  $.fancybox.defaults.closeEffect = 'none';
+  $.fancybox.defaults.nextEffect = 'none';
+  $.fancybox.defaults.prevEffect = 'none';
+  $.fancybox.defaults.helpers.overlay.speedOut = 0;
+  $.fancybox.defaults.helpers.overlay.opacity = 0.9;
+  $.fancybox.defaults.helpers.overlay.css['background-color'] = '#3e4754';
+  $.fancybox.defaults.helpers.title.type = 'inside';
+  $.fancybox.defaults.padding = 3;
+  $.fancybox.defaults.margin = 50;
+  $.fancybox.defaults.wrapCSS = 'lapl-gallery-popup';
+  $.fancybox.defaults.autoResize = false;
+
+  // very generic setup for a modal window
+  $('a.fancybox').fancybox();
+
+  // open the "reserve a computer" iframe into a fancybox
+//  $('#block-block-10').find('.block-title a').fancybox({
+  //  type: 'iframe',
+ //   width: 550,
+  //  height: 450
+//  });
+
+
+
+
+
+
+
+
+
+  // togglable blocks: rel=toggle uses the target ID as the href
+  $('a[rel=toggle]').bind('click.toggle', function () {
+    var target = $(this).toggleClass('is-hidden').toggleClass('is-visible').attr('href');
+    $(target).toggleClass('hide');
+    return false;
+  }).trigger('click.toggle');
+
+  // open external links in a new windows
+  $("a:urlExternal").not("[href*='www.lapl.org']").attr("target", "_blank");
+
+  // polyfill for HTML5 Placeholder element on browsers that don't support it:
+  if (!Modernizr.placeholder) {
+    Placeholders.init();
+  }
+
+
+
+  // header search: open remote searches in _blank
+  $('#lapl-search-search-block-form').find('select[name=search_area]').bind('change', function() {
+    switch($(this).val()) {
+      case "site":
+        $(this).parents('form').removeAttr('target');
+        break;
+      default:
+        $(this).parents('form').attr('target','_blank');
+    }
+  });
+
+
+  /* social media block on home page is so close to the end of
+   * the document it causes a page jump when toggled. fix that by
+   * scrolling the browser to bottom when tabs are changed
+   * Effectively, "fix" the bottom of the doc to the bottom of
+   * the window.
+   */
+  if ($('body').hasClass('front')) {
+    var offset = $('#social-media').offset();
+    $('#social-media').bind('easytabs:after', function(){
+      window.scrollTo(0, offset.top);
+    });
+  }
+
+  $('#catalog-edit-submit').click(function() {
+    if ($('#edit-terms').val() === '') {
+      alert('Please enter at least one search term.');
+      return false;
+    }
+  });
+  $('#photo-edit-submit').click(function() {
+    if ($('#edit-terms--3').val() === '') {
+      alert('Please enter at least one search term.');
+      return false;
+    }
+  });
+  $('#remote-submissions-catalog-block-form #edit-type').change(function() {
+    switch ($('#remote-submissions-catalog-block-form #edit-type').val()) {
+      case "W":
+        $('#remote-submissions-catalog-block-form #index').val('W');
+        break;
+      case "N":
+        $('#remote-submissions-catalog-block-form #index').val('N');
+        break;
+      case "T":
+        $('#remote-submissions-catalog-block-form #index').val('T');
+        break;
+    }
+  });
+  $('#remote-submissions-photo-block-form #edit-type--3').change(function() {
+    switch ($('#remote-submissions-photo-block-form #edit-type--3').val()) {
+      case "W":
+        $('#remote-submissions-photo-block-form #index').val('W');
+        break;
+      case "N":
+        $('#remote-submissions-photo-block-form #index').val('N');
+        break;
+      case "T":
+        $('#remote-submissions-photo-block-form #index').val('T');
+        break;
+    }
+  });
+
+
+  // cleanup formatting of visual collection search results
+  $('.page-collections-resources-visual-collections-search').find('.search-results').children(':nth-child(4n+1)').css({'clear':'left'});
+
+
+  // activate jPlayer for generic elements
+  $('.player-placeholder').audioplayer();
+
+
+  // http://support.addthis.com/customer/portal/articles/381221-optimizing-addthis-performance
+  /* Normally, AddThis executes initialization code as soon as it arrives on the page.
+   * While we strive to make this as efficient as possible, load times of more important
+   * resources can be affected. To optimize load time, AddThis can be loaded asynchronously,
+   * such that no assets are loaded and only the most essential processing occurs.
+   */
+if ($('body').hasClass('not-front')) {
+  addthis.init();
+}
+
+}); // once
+}); // ready
+;

@@ -1,0 +1,325 @@
+(function($) {
+
+    $('.promo-slideshow-slides')
+      .addClass('owl-carousel')
+      .owlCarousel({
+        items: 1,
+        autoplay: true,
+        autoplayTimeout: 5000,
+        autoplayHoverPause: true,
+        animateOut: 'fadeOut',
+        rewind: true
+    });
+
+})(jQuery);
+;
+(function($) {
+
+    var $trigger = $('<a />', {
+        'href': '#mmenu-wrapper',
+        'class': 'mmenu-trigger',
+        'text': 'Menu'
+    }).prependTo('#header');
+
+    var $mmenu = $('#mmenu-wrapper').mmenu(
+        // options
+        {
+            extensions: [
+                'border-none',
+                'multiline',
+                'shadow-page',
+            ],
+            slidingSubmenus: false,
+            // scrollBugFix: false,
+            offCanvas: {
+                position: 'left',
+                zposition : 'back'
+            },
+            navbar: false
+        },
+        // configuration
+        {
+            classNames: {
+                selected: 'menu-item--active',
+            },
+            offCanvas: {
+                pageSelector: '#page-wrapper'
+            }
+        }
+    );
+
+    // https://github.com/FrDH/jQuery.mmenu/issues/761
+    $mmenu.find('.mm-panels .mm-panel').addClass('mm-opened');
+
+
+    var api = $mmenu.data('mmenu');
+
+    api.bind("open:start", function() {
+            $trigger.toggleClass('is-expanded');
+        })
+       .bind("close:start", function() {
+            $trigger.toggleClass('is-expanded');
+        });
+
+
+    /*
+     * imported from lapl2012/less/breakpoints.less
+     *
+     * @navigation-hidden  : ~"(max-width: 727px)";
+     * @navigation-flex    : ~"(min-width: 728px) and (max-width: 977px)";
+     * @navigation-wide    : ~"(min-width: 978px)";
+     */
+
+    enquire.register('(min-width: 728px)', {
+        match: function() {
+            api.close();
+        }
+    });
+
+})(jQuery);
+;
+(function($) {
+
+    if ($('#lapl-search-search-block-form').length) {
+
+        $('<a />', {
+            'href': '#lapl-search-search-block-form',
+            'class': 'search-trigger',
+            'text': 'Search'
+         }).appendTo('#header');
+
+        var panel = $('#lapl-search-search-block-form').mmenu(
+            // options
+            {
+                'extensions': [
+                    "shadow-panels",
+                    "shadow-page",
+                ],
+                 'offCanvas': {
+                    'position': 'top',
+                    'zposition': 'front'
+                 },
+                 'navbar': {
+                    'add': true,
+                    'title': 'Search LAPL<i class="mm-close">close</i>',
+                    'titleLink': "none"
+                 },
+                 'autoHeight': true
+            },
+            // configuration
+            {
+                clone: true,
+                offCanvas: {
+                    pageSelector: '#page-wrapper'
+                }
+            }
+        );
+
+        var api = panel.data('mmenu');
+
+        $('#mm-lapl-search-search-block-form').find('.form-item').wrapAll('<div class="mm-search-wrapper"></div>');
+
+        $('#mm-lapl-search-search-block-form').find('#mm-edit-submit--2').remove(); 
+
+        var button = $('<button></button>', {
+            class: 'mm-search-submit',
+            type: 'submit',
+            text: "Find It"
+        });
+
+        button.appendTo(' #mm-lapl-search-search-block-form .mm-search-wrapper');
+
+        button.wrap('<div class="form-type-button"></div>');
+
+        $('#mm-lapl-search-search-block-form').find('.mm-close').on('click', function(e) {
+            api.close();
+        });
+
+        /*
+         * imported from lapl2012/less/breakpoints.less
+         *
+         * @search-hidden      : ~"(max-width: 727px)";
+         * @search-minimized   : ~"(min-width: 728px) and (max-width: 949px)";
+         * @search-visible     : ~"(min-width: 950px)";
+         */
+
+        enquire.register('(min-width: 950px)', {
+            match: function() {
+                api.close();
+            }
+        });
+
+    }
+
+})(jQuery);
+;
+(function($) {
+    $(".hot-titles").each(function(n, block) {
+        var scrollers = $(block).find(".scroller");
+
+        scrollers.each(function(i, list) {
+            $(block)
+                .imagesLoaded()
+                .always(function(instance) {
+                    // Triggered after all images have been either loaded or confirmed broken.
+
+                    $(list)
+                        .find("img")
+                        .each(function(x, img) {
+                            $(img)
+                                .parents("a")
+                                .css({
+                                    width: $(img).attr("width")
+                                });
+                        });
+
+                    $(list)
+                        .addClass("owl-carousel")
+                        .owlCarousel({
+                            items: 4,
+                            margin: 10,
+                            stagePadding: 3,
+                            autoWidth: true,
+                            mouseDrag: false,
+                            pullDrag: true,
+                            dots: false,
+                            nav: true,
+                            navClass: ["prev-page", "next-page"],
+                            slideBy: 2,
+                            onInitialized: function() {
+                                $(list)
+                                    .parents(".tab-panels")
+                                    .addClass("owl-loaded");
+
+                                // init info bubbles
+                                var triggerEvent = Modernizr.touchevents ? "click" : "hover";
+                                var containerElement = Modernizr.touchevents
+                                    ? block
+                                    : document.body;
+
+                                $(list)
+                                    .find(".views-row")
+                                    .webuiPopover({
+                                        cache: false,
+                                        trigger: triggerEvent,
+                                        delay: {
+                                            show: 200,
+                                            hide: 200
+                                        },
+                                        closeable: true,
+                                        placement: "auto-top",
+                                        container: containerElement,
+                                        width: 250,
+                                        animation: "fade",
+                                        style: "lapl",
+                                        content: function() {
+                                            return $(this)
+                                                .find(".popover-content")
+                                                .html();
+                                        }
+                                    });
+                            }
+                        });
+
+                    $(list).on("drag.owl.carousel", function(e) {
+                        WebuiPopovers.hideAll();
+                    });
+                });
+        }); // <<
+
+        var tabs = $(block).find(".tab-links"); // 'DL'
+        var heading = tabs.children("dt");
+
+        if (tabs.children("dd").length > 1) {
+            tabs.children(":last").addClass("last");
+            tabs.children("li:first-child").addClass("first");
+
+            $(block).easytabs({
+                animate: false,
+                updateHash: false,
+                tabs: ".tab-links li, .tab-links dd",
+                defaultTab: "li:first-child, dd:first-child, dt+dd"
+            });
+
+            $(block).bind("easytabs:after", function(e, $clicked, $targetPanel, settings) {
+                $targetPanel.find(".scroller").trigger("refresh.owl.carousel");
+            });
+        }
+
+        /*
+         * imported from lapl2012/less/breakpoints.less
+         *
+         * @layout-small : ~"(max-width: 727px)";
+         */
+
+        enquire.register("(max-width: 727px)", {
+            match: function() {
+                heading.data({
+                    title: heading.text()
+                });
+                tabs.find("dt").on("click.tabsmenu", function(e) {
+                    tabs.toggleClass("is-expanded");
+                });
+                tabs.find("a").on("click.tabsmenu", function(e) {
+                    tabs.removeClass("is-expanded");
+                    heading.text($(this).text());
+                });
+                heading.text(tabs.children(".active").text());
+            },
+            unmatch: function() {
+                heading.text(heading.data("title"));
+                tabs.find("a").off("click.tabsmenu");
+            }
+        });
+    });
+})(jQuery);
+;
+(function($) {
+    $(".js-tabs").each(function(n, block) {
+        $(block).easytabs({
+            animate: false,
+            updateHash: false,
+            tabs: ".tab-links li, .tab-links dd",
+            defaultTab: "li:first, dd:first"
+        });
+
+        // add first, last utility classes and force tab heights to be equal
+        $(block)
+            .find(".tab-links")
+            .each(function() {
+                $(this)
+                    .children("li:first, dd:first")
+                    .addClass("first");
+                $(this)
+                    .children(":last-child")
+                    .addClass("last");
+                // $(this).children().find('a').equalizeHeights();
+                // $(this).addClass('equalizeHeights');
+            });
+
+        var tabs = $(block).find(".tab-links");
+        var heading = tabs.children("dt");
+        enquire.register("(max-width: 727px)", {
+            match: function() {
+                var defultText =
+                    tabs.children(".active").text() || tabs.children("dd:first").text();
+                heading.data({
+                    title: heading.text()
+                });
+                tabs.find("dt").on("click.tabsmenu", function(e) {
+                    tabs.toggleClass("is-expanded");
+                });
+                tabs.find("a").on("click.tabsmenu", function(e) {
+                    tabs.removeClass("is-expanded");
+                    heading.text($(this).text());
+                });
+                heading.text(defultText);
+            },
+            unmatch: function() {
+                heading.text(heading.data("title"));
+                tabs.find("a").off("click.tabsmenu");
+            }
+        });
+    });
+})(jQuery);
+;
